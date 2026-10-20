@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ithaca",
+    "title": "Ithaca, Greece",
+    "subtitle": "Where the journey ends",
+    "mythologyTie": "Odysseus's home",
+    "image": "linear-gradient(135deg, #0f2540, #2e6e71)"
+  },
+  {
+    "id": "santorini",
+    "title": "Santorini, Greece",
+    "subtitle": "Cliffside villages over the caldera",
+    "mythologyTie": "Said to be lost Atlantis",
+    "image": "linear-gradient(135deg, #2e6e71, #b9862f)"
+  },
+  {
+    "id": "troy",
+    "title": "Çanakkale (Troy), Türkiye",
+    "subtitle": "Ancient walls, wooden horse replica",
+    "mythologyTie": "Site of the Trojan War",
+    "image": "linear-gradient(135deg, #a6432d, #0f2540)"
+  },
+  {
+    "id": "sicily",
+    "title": "Sicily, Italy",
+    "subtitle": "Etna, coastlines, and citrus groves",
+    "mythologyTie": "Home of the Cyclops Polyphemus",
+    "image": "linear-gradient(135deg, #081729, #a6432d)"
+  },
+  {
+    "id": "malta",
+    "title": "Malta",
+    "subtitle": "Limestone cliffs and hidden coves",
+    "mythologyTie": "Said to be Calypso's island, Ogygia",
+    "image": "linear-gradient(135deg, #0f2540, #d9a63f)"
+  },
+  {
+    "id": "corfu",
+    "title": "Corfu, Greece",
+    "subtitle": "Olive groves and Venetian old town",
+    "mythologyTie": "Land of the Phaeacians",
+    "image": "linear-gradient(135deg, #2e6e71, #081729)"
+  }
+]
