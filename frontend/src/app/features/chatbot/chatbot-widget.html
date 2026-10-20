@@ -1,0 +1,80 @@
+<div class="chat" [class.chat--open]="open()">
+  <button
+    type="button"
+    class="chat__toggle"
+    (click)="toggle()"
+    [attr.aria-expanded]="open()"
+    aria-label="Open the wayfinder chatbot"
+  >
+    {{ open() ? '✕' : '🏺' }}
+  </button>
+
+  @if (open()) {
+    <div class="chat__panel card">
+      <div class="chat__header">
+        <strong>The Wayfinder</strong>
+        <span class="chat__subtitle">Your AI trip-planning oracle</span>
+      </div>
+
+      <div class="chat__messages">
+        @for (m of messages(); track $index) {
+          <div class="chat__bubble" [class.chat__bubble--user]="m.role === 'user'">
+            {{ m.content }}
+          </div>
+        }
+
+        @if (showPlanner()) {
+          <div class="chat__planner">
+            <label>
+              Destination
+              <input type="text" [(ngModel)]="plannerDestination" placeholder="Santorini, Greece" />
+            </label>
+            <label>
+              Days
+              <input type="number" min="1" max="21" [(ngModel)]="plannerDays" />
+            </label>
+            <label>
+              Interests
+              <input type="text" [(ngModel)]="plannerInterests" placeholder="ruins, beaches, food" />
+            </label>
+            <button type="button" class="btn btn--primary" (click)="submitPlanner()" [disabled]="planning()">
+              {{ planning() ? 'Drafting...' : 'Draft itinerary' }}
+            </button>
+          </div>
+        }
+
+        @if (plan(); as p) {
+          <div class="chat__plan">
+            @for (day of p.days; track day.day) {
+              <div class="chat__plan-day">
+                <span class="chat__plan-day-label">Day {{ day.day }}</span>
+                <strong>{{ day.title }}</strong>
+                <ul>
+                  @for (a of day.activities; track a) {
+                    <li>{{ a }}</li>
+                  }
+                </ul>
+              </div>
+            }
+            @if (p.demoMode) {
+              <p class="chat__demo">Demo itinerary &middot; add OPENAI_API_KEY for AI-generated plans</p>
+            }
+          </div>
+        }
+
+        <div #scrollAnchor></div>
+      </div>
+
+      <form class="chat__input" (ngSubmit)="send()">
+        <input
+          type="text"
+          name="draft"
+          [(ngModel)]="draft"
+          placeholder="Ask about your trip..."
+          [disabled]="sending()"
+        />
+        <button type="submit" class="btn btn--primary" [disabled]="sending() || !draft.trim()">Send</button>
+      </form>
+    </div>
+  }
+</div>

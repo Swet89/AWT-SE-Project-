@@ -1,0 +1,27 @@
+<section class="hot" aria-labelledby="hot-heading">
+  <div class="hot__head">
+    <span class="eyebrow">Trending Journeys</span>
+    <h2 id="hot-heading">Where the epics happened</h2>
+  </div>
+
+  @if (loading()) {
+    <div class="hot__row" aria-hidden="true">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="hot__card hot__card--skeleton"></div>
+      }
+    </div>
+  } @else {
+    <div class="hot__row">
+      @for (item of items(); track item.id) {
+        <button type="button" class="hot__card" (click)="pick(item)">
+          <span class="hot__card-image" [style.background]="item.image"></span>
+          <span class="hot__card-body">
+            <span class="hot__card-title">{{ item.title }}</span>
+            <span class="hot__card-subtitle">{{ item.subtitle }}</span>
+            <span class="hot__card-myth">{{ item.mythologyTie }}</span>
+          </span>
+        </button>
+      }
+    </div>
+  }
+</section>

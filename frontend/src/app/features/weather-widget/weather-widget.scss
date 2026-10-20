@@ -1,0 +1,69 @@
+.weather {
+  padding: 1.3rem 1.4rem 1.5rem;
+  min-width: 260px;
+
+  &__head h3 {
+    font-size: 1.05rem;
+    margin-top: 0.2rem;
+  }
+
+  &__form {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.9rem 0;
+
+    input {
+      flex: 1;
+      padding: 0.55rem 0.7rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-raised);
+      color: var(--color-text);
+    }
+  }
+
+  &__error {
+    color: var(--color-accent-oxide);
+    font-size: 0.85rem;
+  }
+
+  &__result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__deity {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-accent-gold) 18%, transparent);
+    color: var(--color-accent-gold);
+  }
+
+  &__temp {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+  }
+
+  &__desc {
+    text-transform: capitalize;
+    color: var(--color-text-muted);
+  }
+
+  &__meta {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+  }
+
+  &__demo {
+    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    color: var(--color-accent-sea);
+  }
+}

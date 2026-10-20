@@ -1,0 +1,52 @@
+.footer {
+  margin-top: 4rem;
+  background: var(--color-primary);
+  color: var(--color-parchment-muted);
+
+  &__inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 3rem;
+    text-align: center;
+  }
+
+  &__brand {
+    font-family: var(--font-display);
+    color: var(--color-parchment);
+    letter-spacing: 0.1em;
+    font-size: 1.05rem;
+  }
+
+  &__mark {
+    color: var(--color-accent-gold);
+  }
+
+  &__tagline {
+    margin: 0.6rem 0 1.4rem;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+
+  &__links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.4rem;
+
+    a {
+      color: var(--color-parchment-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+
+      &:hover {
+        color: var(--color-accent-gold);
+      }
+    }
+  }
+
+  &__meta {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin: 0;
+  }
+}

@@ -1,0 +1,54 @@
+<section class="hero" [class.hero--fallback]="videoFailed()">
+  <video
+    #bgVideo
+    class="hero__video"
+    autoplay
+    muted
+    loop
+    playsinline
+    poster="assets/hero-poster.svg"
+    (error)="onVideoError()"
+  >
+    <source src="assets/video/aegean-loop.mp4" type="video/mp4" />
+  </video>
+  <div class="hero__overlay"></div>
+
+  <audio #bgAudio loop preload="none">
+    <source src="assets/audio/odyssey-theme.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div class="hero__content container">
+    <span class="eyebrow hero__eyebrow">A journey planner for wanderers</span>
+    <h1 class="hero__title">Your own Odyssey<br />starts at the harbor.</h1>
+    <p class="hero__subtitle">
+      Search flights, trains, buses, cruises and stays in one crossing. Let the AI wayfinder
+      chart your itinerary, then try your hand at the Contest of the Bow.
+    </p>
+
+    <button type="button" class="hero__music" (click)="toggleMusic()" [attr.aria-pressed]="musicPlaying()">
+      {{ musicPlaying() ? '🔇 Silence the lyre' : '🎵 Play the Sirens’ song' }}
+    </button>
+
+    <div id="search-anchor" class="hero__search">
+      <app-search-bar #searchBar />
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <app-hot-suggestions (destinationPicked)="onDestinationPicked($event)" />
+
+  <app-meander-divider />
+
+  <section class="split">
+    <div class="split__text">
+      <span class="eyebrow">Consult the sky</span>
+      <h2>Every port has its own weather god</h2>
+      <p>
+        Check conditions before you book. Rain, shine, or the wrath of Poseidon — know what
+        you're sailing into.
+      </p>
+    </div>
+    <app-weather-widget />
+  </section>
+</div>
