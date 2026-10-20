@@ -1,0 +1,49 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      PORT: 4000
+      NODE_ENV: production
+      MONGO_URI: mongodb://mongo:27017/odyssey_travel
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in a .env file next to docker-compose.yml}
+      JWT_EXPIRES_IN: 7d
+      CLIENT_ORIGIN: http://localhost:8080
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY:-}
+      AMADEUS_CLIENT_ID: ${AMADEUS_CLIENT_ID:-}
+      AMADEUS_CLIENT_SECRET: ${AMADEUS_CLIENT_SECRET:-}
+      AMADEUS_ENV: ${AMADEUS_ENV:-test}
+      TRAIN_API_URL: ${TRAIN_API_URL:-}
+      TRAIN_API_KEY: ${TRAIN_API_KEY:-}
+      BUS_API_URL: ${BUS_API_URL:-}
+      BUS_API_KEY: ${BUS_API_KEY:-}
+      CRUISE_API_URL: ${CRUISE_API_URL:-}
+      CRUISE_API_KEY: ${CRUISE_API_KEY:-}
+      HOTEL_API_URL: ${HOTEL_API_URL:-}
+      HOTEL_API_KEY: ${HOTEL_API_KEY:-}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY:-}
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  mongo_data:
