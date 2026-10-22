@@ -1,0 +1,330 @@
+/* Odyssey Travel — Aegean editorial design system */
+:root {
+  --odyssey-ink: #17272e;
+  --odyssey-navy: #10232d;
+  --odyssey-navy-soft: #1b3741;
+  --odyssey-gold: #b58b4a;
+  --odyssey-gold-light: #e4c98e;
+  --odyssey-terracotta: #ad634d;
+  --odyssey-paper: #f6f2e9;
+  --odyssey-paper-light: #fffdf8;
+  --odyssey-muted: #647176;
+  --odyssey-line: #e5dccb;
+  --odyssey-shadow: 0 18px 50px rgb(31 39 39 / 9%);
+  --odyssey-radius: 16px;
+  --odyssey-ease: cubic-bezier(.2,.75,.25,1);
+  font-family: 'DM Sans', Inter, system-ui, sans-serif;
+  color: var(--odyssey-ink);
+  background: var(--odyssey-paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { min-width: 320px; scroll-behavior: smooth; background: var(--odyssey-paper); }
+body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--odyssey-ink); background: var(--odyssey-paper); }
+#root { width: 100%; min-height: 100vh; margin: 0; border: 0; text-align: left; }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+::selection { color: var(--odyssey-navy); background: #ead7ae; }
+
+h1, h2, h3, h4 { color: var(--odyssey-ink); text-wrap: balance; }
+p { line-height: 1.7; }
+a { color: #866431; text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid #c79c57 !important; outline-offset: 3px; }
+
+/* A quiet paper grain and Mediterranean light unify the inner pages. */
+.destinations-page, .auth-page, .journeys-page, .travel-search-page,
+.contact-page, .dev-team-page, .not-found-page, .wayfinder-page,
+.contest-page, .destination-details, .welcome-page {
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100vh - 80px);
+  background:
+    radial-gradient(ellipse at 8% 5%, rgb(213 190 145 / 15%), transparent 34rem),
+    radial-gradient(ellipse at 92% 95%, rgb(174 116 84 / 8%), transparent 30rem),
+    linear-gradient(135deg, #faf7f0 0%, var(--odyssey-paper) 52%, #f2ecdf 100%);
+  color: var(--odyssey-ink);
+}
+.destinations-page::before, .auth-page::before, .journeys-page::before,
+.travel-search-page::before, .wayfinder-page::before, .contest-page::before,
+.destination-details::before, .contact-page::before, .dev-team-page::before,
+.not-found-page::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.11'/%3E%3C/svg%3E");
+  opacity: .16;
+  pointer-events: none;
+  content: '';
+}
+
+/* A refined, readable navigation bar */
+.navbar {
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  min-height: 78px;
+  padding: 14px max(5.5%, calc((100vw - 1440px) / 2));
+  border-bottom: 1px solid rgb(228 201 142 / 14%);
+  background: rgb(15 34 44 / 94%);
+  box-shadow: 0 8px 28px rgb(8 22 29 / 12%);
+  backdrop-filter: blur(18px);
+}
+.brand { gap: 12px; color: #fff9ee; font-size: 13px; letter-spacing: 2.2px; }
+.brand-mark { width: 37px; height: 37px; border-color: rgb(228 201 142 / 70%); color: var(--odyssey-gold-light); }
+.nav-links { gap: clamp(14px, 2vw, 30px); }
+.nav-links a, .nav-signout-button { color: rgb(255 250 240 / 82%); font-size: 12px; font-weight: 500; text-decoration: none; transition: color .2s var(--odyssey-ease); }
+.nav-links a:hover, .nav-signout-button:hover { color: var(--odyssey-gold-light); }
+.nav-links a[aria-current='page'] { color: var(--odyssey-gold-light); }
+.sign-in, .nav-control-button, .music-control { border-radius: 999px; }
+.nav-control-button, .music-control { min-height: 36px; padding: 7px 12px; border: 1px solid rgb(228 201 142 / 35%); background: rgb(255 255 255 / 5%); color: #fff8e9; font-size: 11px; }
+
+/* Editorial title hierarchy */
+.eyebrow, .eyebrow.dark { color: #9a7135; font-size: 10px; font-weight: 700; letter-spacing: 2.4px; line-height: 1.5; }
+.eyebrow > span { background: var(--odyssey-gold); }
+.destinations-heading h1, .journeys-panel h1, .travel-search-heading h1,
+.wayfinder-heading h1, .contest-heading h1, .dev-team-heading h1,
+.not-found-page h1, .contact-card h1, .destination-details h1 {
+  color: var(--odyssey-ink);
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+/* Fields, selects and action controls */
+input, select, textarea {
+  min-height: 46px;
+  border: 1px solid #d9cfbd;
+  border-radius: 9px;
+  background: rgb(255 253 248 / 96%);
+  color: var(--odyssey-ink);
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+input:focus, select:focus, textarea:focus { border-color: #b68a49; outline: 0; box-shadow: 0 0 0 4px rgb(181 139 74 / 15%); }
+input::placeholder, textarea::placeholder { color: #899194; }
+button, .home-search button, .destination-search button, .auth-form button,
+.wayfinder-form button, .travel-search-form button, .book-option-button,
+.journeys-empty button, .view-itinerary-button, .contest-start-card button,
+.contest-retry-button, .team-explore-link, .plan-trip-button {
+  transition: transform .2s var(--odyssey-ease), box-shadow .2s ease, background-color .2s ease, border-color .2s ease;
+}
+button:hover:not(:disabled), .team-explore-link:hover, .plan-trip-button:hover { transform: translateY(-2px); }
+button:disabled { cursor: not-allowed; opacity: .58; }
+.auth-form button, .wayfinder-form button, .travel-search-form button,
+.book-option-button, .journeys-empty button, .plan-trip-button,
+.team-explore-link, .contest-start-card button, .contest-retry-button {
+  border: 1px solid #bd9658;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #c6a263, #e1c88f);
+  color: #17272e;
+  font-weight: 700;
+  box-shadow: 0 7px 18px rgb(132 99 46 / 14%);
+}
+.auth-form button:hover:not(:disabled), .wayfinder-form button:hover:not(:disabled),
+.travel-search-form button:hover:not(:disabled), .book-option-button:hover:not(:disabled) { box-shadow: 0 11px 24px rgb(132 99 46 / 24%); }
+
+/* Cards: softer edges, real depth, more generous rhythm */
+.destination-card, .home-destination-card, .auth-card, .travel-search-form,
+.travel-option, .booking-panel, .booking-confirmation, .history-card,
+.profile-edit-form, .destination-reviews, .contact-card, .dev-team-card,
+.wayfinder-form, .itinerary-print-area, .saved-itinerary, .contest-start-card,
+.contest-result, .related-destination-card, .journeys-empty {
+  border: 1px solid rgb(178 151 107 / 27%);
+  border-radius: var(--odyssey-radius);
+  background: rgb(255 253 248 / 91%);
+  box-shadow: var(--odyssey-shadow);
+}
+.destination-card, .home-destination-card, .related-destination-card { transition: transform .35s var(--odyssey-ease), box-shadow .35s ease, border-color .25s ease; }
+.destination-card:hover, .home-destination-card:hover, .related-destination-card:hover { transform: translateY(-6px); border-color: rgb(181 139 74 / 55%); box-shadow: 0 24px 50px rgb(31 39 39 / 15%); }
+.destination-card img, .home-destination-card img { transition: transform .6s var(--odyssey-ease), filter .4s ease; }
+.destination-card:hover img, .home-destination-card:hover img { transform: scale(1.035); filter: saturate(1.08); }
+.destination-card { border-radius: 14px; }
+.destination-card-content { padding: 20px; }
+.destination-card h2, .home-destination-card h3 { color: var(--odyssey-ink); }
+.destination-description, .destination-season, .home-destination-budget { color: #647176; }
+.destination-budget { color: #213a40; }
+.favorite-button, .remove-favorite-button { border-radius: 999px; }
+.destination-search input, .destination-sort-control select { border-radius: 9px; }
+.destination-search button { border-radius: 9px; background: var(--odyssey-navy); }
+
+/* Destination detail layout */
+.destination-details { width: 100%; padding: 42px max(6%, calc((100vw - 1120px) / 2)) 90px; }
+.destination-details-image { display: block; width: 100%; max-height: 590px; border-radius: 20px; object-fit: cover; box-shadow: 0 26px 70px rgb(18 36 43 / 22%); }
+.destination-details > h1 { margin: 12px 0; font-size: clamp(42px, 6vw, 76px); }
+.destination-arrival-info, .trip-budget-calculator, .destination-reviews { margin-top: 28px; padding: 24px; border: 1px solid var(--odyssey-line); border-radius: 15px; background: rgb(255 253 248 / 88%); box-shadow: 0 12px 35px rgb(31 39 39 / 6%); }
+.destination-details-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 12px; }
+.detail-favorite-button, .detail-share-button, .destination-map-link { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 10px 16px; border: 1px solid #d4c5a9; border-radius: 9px; background: #fffdf8; color: var(--odyssey-ink); font-weight: 600; text-decoration: none; }
+.plan-trip-button { display: inline-flex; align-items: center; justify-content: center; padding: 12px 17px; text-decoration: none; }
+.related-destination-card { overflow: hidden; color: var(--odyssey-ink); text-decoration: none; }
+.related-destination-card img { width: 100%; aspect-ratio: 1.6; object-fit: cover; }
+
+/* Home hero and its premium glass search */
+.home-hero { min-height: min(820px, calc(100svh - 78px)); height: min(900px, calc(100svh - 78px)); padding-inline: max(8%, calc((100vw - 1440px) / 2)); background-color: #10232d; }
+.home-hero-overlay { background: linear-gradient(90deg, rgb(8 24 32 / 90%) 0%, rgb(8 24 32 / 64%) 48%, rgb(8 24 32 / 20%) 100%), linear-gradient(0deg, rgb(8 24 32 / 48%), transparent 48%); }
+.home-content h1 { max-width: 760px; font-size: clamp(54px, 7.5vw, 102px); letter-spacing: -.04em; }
+.home-intro { font-size: clamp(15px, 1.35vw, 18px); }
+.home-search { min-height: 66px; border: 1px solid rgb(245 229 194 / 50%); border-radius: 13px; background: rgb(255 255 255 / 13%); box-shadow: 0 15px 45px rgb(0 0 0 / 16%); backdrop-filter: blur(18px); }
+.home-search button { border-radius: 9px; background: linear-gradient(135deg, #c6a263, #e6ce98); }
+.hot-suggestions button { border-radius: 999px; backdrop-filter: blur(10px); }
+.search-suggestions { position: relative; z-index: 5; border: 1px solid var(--odyssey-line); border-radius: 12px; box-shadow: 0 15px 35px rgb(0 0 0 / 20%); }
+.travel-marquee { border-color: rgb(228 201 142 / 22%); background: #142d36; }
+.home-discover-section { padding-block: clamp(64px, 8vw, 110px); }
+.home-destination-card { border-radius: 15px; }
+.home-feature-card { border-radius: 18px; }
+
+/* Search, Wayfinder and booking pages */
+.travel-search-page, .wayfinder-page, .contest-page { padding: clamp(40px, 6vw, 76px) max(6%, calc((100vw - 1150px) / 2)) 90px; }
+.travel-search-heading, .wayfinder-heading, .contest-heading { text-align: center; }
+.travel-search-heading h1, .wayfinder-heading h1, .contest-heading h1 { margin: 12px 0 14px; font-size: clamp(42px, 6.5vw, 76px); }
+.travel-search-heading > p:last-child, .wayfinder-heading > p:last-child, .contest-heading > p:last-child { color: var(--odyssey-muted); }
+.travel-search-form, .wayfinder-form { margin: 34px auto 22px; padding: clamp(20px, 3vw, 34px); border-radius: 18px; }
+.travel-search-form label, .wayfinder-form label, .booking-form label { color: #405056; font-weight: 600; }
+.wayfinder-form input, .wayfinder-form select, .wayfinder-form textarea,
+.travel-search-form input, .travel-search-form select, .booking-form input { min-height: 46px; border-radius: 9px; }
+.wayfinder-message { color: #286345; }
+.travel-option { padding: 22px; border-radius: 15px; transition: transform .22s ease, box-shadow .22s ease; }
+.travel-option:hover { transform: translateY(-3px); box-shadow: 0 20px 44px rgb(31 39 39 / 12%); }
+.travel-option-price { color: #173a3c; }
+.estimated-badge, .live-badge { border-radius: 999px; }
+.booking-panel { padding: clamp(20px, 3vw, 34px); }
+.booking-price-breakdown { border-radius: 12px; background: #f3eddf; }
+.itinerary-print-area { padding: clamp(22px, 4vw, 40px); }
+.itinerary-day { padding: 18px; border: 1px solid var(--odyssey-line); border-radius: 13px; background: #fffefa; }
+.itinerary-activity { border-color: #e8dfd0; }
+.saved-itinerary { padding: 20px; }
+.search-pagination button, .booking-close, .itinerary-actions button,
+.view-itinerary-button, .edit-profile-button { border-radius: 9px; }
+
+/* Auth, profile, saved trips and supporting pages */
+.auth-page { padding: 64px 20px; }
+.auth-card { padding: clamp(26px, 4vw, 42px); border-radius: 20px; }
+.auth-card h1 { color: var(--odyssey-ink); }
+.auth-intro, .auth-switch { color: var(--odyssey-muted); }
+.journeys-panel { max-width: 1040px; }
+.journeys-page, .destinations-page { padding-block: clamp(42px, 6vw, 76px) 90px; }
+.saved-section { margin-top: 44px; }
+.saved-section > h2 { color: var(--odyssey-ink); font-family: 'Cinzel', Georgia, serif; font-size: clamp(25px, 3vw, 34px); }
+.profile-summary, .booking-history-main, .saved-itinerary-header { gap: 22px; }
+.history-card, .profile-edit-form, .contact-card, .dev-team-card { padding: 24px; }
+.journeys-empty { padding: 50px 24px; }
+.contact-card { width: min(680px, 100%); margin-inline: auto; }
+.dev-team-card { transition: transform .25s var(--odyssey-ease), box-shadow .25s ease; }
+.dev-team-card:hover { transform: translateY(-5px); box-shadow: 0 22px 48px rgb(31 39 39 / 12%); }
+.not-found-code { color: rgb(181 139 74 / 30%); }
+.weather-panel { border-radius: 12px; }
+.page-message { color: var(--odyssey-muted); }
+.error-message, .auth-error { color: #a54035; }
+.app-toast { border-radius: 12px; backdrop-filter: blur(14px); }
+
+/* Dark mode uses the same gold-and-marble identity with full readable contrast. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --odyssey-ink: #f3eee3;
+  --odyssey-paper: #101c23;
+  --odyssey-paper-light: #1b2b32;
+  --odyssey-muted: #b8c2c4;
+  --odyssey-line: #35464a;
+  --odyssey-shadow: 0 18px 50px rgb(0 0 0 / 22%);
+  color: #f3eee3;
+  background: #101c23;
+}
+:root[data-theme='dark'] body { color: #f3eee3; background: #101c23; }
+:root[data-theme='dark'] .destinations-page, :root[data-theme='dark'] .auth-page,
+:root[data-theme='dark'] .journeys-page, :root[data-theme='dark'] .travel-search-page,
+:root[data-theme='dark'] .contact-page, :root[data-theme='dark'] .dev-team-page,
+:root[data-theme='dark'] .not-found-page, :root[data-theme='dark'] .wayfinder-page,
+:root[data-theme='dark'] .contest-page, :root[data-theme='dark'] .destination-details,
+:root[data-theme='dark'] .welcome-page {
+  background: radial-gradient(ellipse at 8% 5%, rgb(53 90 93 / 22%), transparent 34rem), radial-gradient(ellipse at 92% 95%, rgb(134 91 64 / 12%), transparent 30rem), linear-gradient(135deg, #101c23, #14252c 55%, #172a30);
+  color: #f3eee3;
+}
+:root[data-theme='dark'] h1, :root[data-theme='dark'] h2, :root[data-theme='dark'] h3,
+:root[data-theme='dark'] h4, :root[data-theme='dark'] .destination-card h2,
+:root[data-theme='dark'] .destination-budget, :root[data-theme='dark'] .travel-option-price,
+:root[data-theme='dark'] .booking-panel h2, :root[data-theme='dark'] .booking-confirmation h2,
+:root[data-theme='dark'] .dev-team-card h2, :root[data-theme='dark'] .dev-team-heading h1,
+:root[data-theme='dark'] .not-found-page h1, :root[data-theme='dark'] .saved-section > h2,
+:root[data-theme='dark'] .destinations-heading h1, :root[data-theme='dark'] .journeys-panel h1,
+:root[data-theme='dark'] .travel-search-heading h1, :root[data-theme='dark'] .wayfinder-heading h1,
+:root[data-theme='dark'] .contest-heading h1, :root[data-theme='dark'] .destination-details h1,
+:root[data-theme='dark'] .auth-card h1 { color: #f3eee3; }
+:root[data-theme='dark'] .destination-card, :root[data-theme='dark'] .home-destination-card,
+:root[data-theme='dark'] .auth-card, :root[data-theme='dark'] .travel-search-form,
+:root[data-theme='dark'] .travel-option, :root[data-theme='dark'] .booking-panel,
+:root[data-theme='dark'] .booking-confirmation, :root[data-theme='dark'] .profile-edit-form,
+:root[data-theme='dark'] .history-card, :root[data-theme='dark'] .destination-reviews,
+:root[data-theme='dark'] .contact-card, :root[data-theme='dark'] .dev-team-card,
+:root[data-theme='dark'] .wayfinder-form, :root[data-theme='dark'] .itinerary-print-area,
+:root[data-theme='dark'] .saved-itinerary, :root[data-theme='dark'] .contest-start-card,
+:root[data-theme='dark'] .contest-result, :root[data-theme='dark'] .journeys-empty,
+:root[data-theme='dark'] .destination-arrival-info, :root[data-theme='dark'] .trip-budget-calculator,
+:root[data-theme='dark'] .itinerary-day, :root[data-theme='dark'] .related-destination-card {
+  border-color: #35464a;
+  background: rgb(27 43 50 / 95%);
+  color: #f3eee3;
+}
+:root[data-theme='dark'] input, :root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea, :root[data-theme='dark'] .destination-search input,
+:root[data-theme='dark'] .destination-sort-control select {
+  border-color: #52666b;
+  background: #12232a;
+  color: #f3eee3;
+}
+:root[data-theme='dark'] .travel-search-heading > p:last-child,
+:root[data-theme='dark'] .wayfinder-heading > p:last-child,
+:root[data-theme='dark'] .contest-heading > p:last-child,
+:root[data-theme='dark'] .destination-description,
+:root[data-theme='dark'] .destination-season,
+:root[data-theme='dark'] .travel-option p,
+:root[data-theme='dark'] .home-destination-budget,
+:root[data-theme='dark'] .auth-intro, :root[data-theme='dark'] .auth-switch,
+:root[data-theme='dark'] .page-message, :root[data-theme='dark'] .journeys-email,
+:root[data-theme='dark'] .dev-team-card p, :root[data-theme='dark'] .dev-team-note,
+:root[data-theme='dark'] .dev-team-heading > p:last-child { color: #b8c5c6; }
+:root[data-theme='dark'] .booking-price-breakdown { background: #22373d; }
+:root[data-theme='dark'] .itinerary-activity { border-color: #405357; }
+:root[data-theme='dark'] .destination-search button { background: #d4b574; color: #14252c; }
+:root[data-theme='dark'] .home-discover-section, :root[data-theme='dark'] .home-features-section { background: #101c23; color: #f3eee3; }
+:root[data-theme='dark'] .home-section-heading h2 { color: #f3eee3; }
+:root[data-theme='dark'] .home-section-heading p:not(.eyebrow), :root[data-theme='dark'] .home-section-status { color: #b8c5c6; }
+:root[data-theme='dark'] .home-stats-section { background: #0d171d; }
+
+@media (max-width: 900px) {
+  .navbar { padding-inline: 5%; }
+  .nav-links { gap: 12px; }
+  .nav-links a, .nav-signout-button { font-size: 11px; }
+}
+@media (max-width: 700px) {
+  .navbar { min-height: 68px; padding: 12px 5%; }
+  .brand { font-size: 10px; letter-spacing: 1px; }
+  .nav-links { max-width: 72%; overflow-x: auto; scrollbar-width: none; }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a, .nav-signout-button { display: inline-flex; flex: 0 0 auto; font-size: 10px; }
+  .nav-links .nav-control-button, .nav-links .music-control { display: inline-flex; align-items: center; white-space: nowrap; }
+  .home-hero { min-height: calc(100svh - 68px); height: auto; padding: 74px 7% 84px; }
+  .home-content h1 { font-size: clamp(48px, 13vw, 72px); }
+  .home-search { flex-wrap: wrap; padding: 8px; }
+  .home-search input { min-height: 45px; flex-basis: 70%; }
+  .home-search button { min-height: 45px; flex: 1; }
+  .destination-details { padding: 28px 6% 65px; }
+  .destination-details-image { max-height: 390px; border-radius: 14px; }
+  .destination-details-actions { align-items: stretch; }
+  .destination-details-actions > * { flex: 1 1 145px; }
+  .travel-search-page, .wayfinder-page, .contest-page { padding-inline: 5%; }
+}
+@media (max-width: 480px) {
+  .brand-mark { width: 31px; height: 31px; }
+  .nav-control-button, .music-control { min-height: 32px; padding: 6px 8px; font-size: 10px; }
+  .destinations-page, .journeys-page { padding-inline: 5%; }
+  .destination-grid { grid-template-columns: 1fr; }
+  .profile-summary, .booking-history-main { align-items: flex-start; flex-direction: column; }
+  .home-search input { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
