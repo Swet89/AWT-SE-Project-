@@ -53,6 +53,42 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
 }
+
+/* Visible luxury scrollbar for AI Concierge chat and dedicated scroll zones */
+.odyssey-chat-messages,
+.odyssey-chat-window,
+[data-lenis-prevent="true"]:not(.home-hero-globe-zone) {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(202, 164, 89, 0.45) transparent !important;
+}
+
+.odyssey-chat-messages::-webkit-scrollbar,
+.odyssey-chat-window::-webkit-scrollbar,
+[data-lenis-prevent="true"]:not(.home-hero-globe-zone)::-webkit-scrollbar {
+  display: block !important;
+  width: 6px !important;
+  height: 6px !important;
+  background: transparent !important;
+}
+
+.odyssey-chat-messages::-webkit-scrollbar-track,
+.odyssey-chat-window::-webkit-scrollbar-track,
+[data-lenis-prevent="true"]:not(.home-hero-globe-zone)::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.odyssey-chat-messages::-webkit-scrollbar-thumb,
+.odyssey-chat-window::-webkit-scrollbar-thumb,
+[data-lenis-prevent="true"]:not(.home-hero-globe-zone)::-webkit-scrollbar-thumb {
+  background: rgba(202, 164, 89, 0.45) !important;
+  border-radius: 999px !important;
+}
+
+.odyssey-chat-messages::-webkit-scrollbar-thumb:hover,
+.odyssey-chat-window::-webkit-scrollbar-thumb:hover,
+[data-lenis-prevent="true"]:not(.home-hero-globe-zone)::-webkit-scrollbar-thumb:hover {
+  background: rgba(202, 164, 89, 0.8) !important;
+}
 html { min-width: 320px; scroll-behavior: smooth; background: var(--odyssey-paper); }
 body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--odyssey-ink); background: var(--odyssey-paper); }
 #root { width: 100%; min-height: 100vh; margin: 0; border: 0; text-align: left; }

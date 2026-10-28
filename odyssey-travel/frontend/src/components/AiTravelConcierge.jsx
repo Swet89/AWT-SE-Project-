@@ -51,6 +51,7 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const chatBottomRef = useRef(null)
+  const messagesContainerRef = useRef(null)
 
   useEffect(() => {
     if (initialPrompt && !isOpen) {
@@ -61,7 +62,11 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
 
   useEffect(() => {
     if (isOpen) {
-      chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+      } else {
+        chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }, [messages, isOpen])
 
@@ -150,6 +155,10 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
       {isOpen && (
         <aside
           aria-label="Odyssey AI Travel Concierge"
+          className="odyssey-chat-window"
+          data-lenis-prevent="true"
+          data-lenis-prevent-wheel="true"
+          data-lenis-prevent-touch="true"
           style={{
             position: 'fixed',
             bottom: '92px',
@@ -226,15 +235,27 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
 
           {/* Messages Scroll View */}
           <div
+            ref={messagesContainerRef}
+            className="odyssey-chat-messages"
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            onWheel={(e) => {
+              e.stopPropagation()
+            }}
             style={{
               flex: 1,
+              minHeight: 0,
               padding: '1rem',
               overflowY: 'auto',
+              overscrollBehavior: 'contain',
               display: 'flex',
               flexDirection: 'column',
               gap: '0.85rem',
               background: 'var(--bg-muted, #faf8f5)',
               color: 'var(--text, #111111)',
+              WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
             }}
           >
             {messages.map((msg) => {

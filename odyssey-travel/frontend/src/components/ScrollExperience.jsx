@@ -52,6 +52,12 @@ export default function ScrollExperience() {
         smoothWheel: true,
         wheelMultiplier: 1,
         touchMultiplier: 1.5,
+        prevent: (node) => {
+          return (
+            node?.hasAttribute?.('data-lenis-prevent') ||
+            Boolean(node?.closest?.('[data-lenis-prevent], .odyssey-chat-messages, .odyssey-chat-window, aside[aria-label="Odyssey AI Travel Concierge"]'))
+          )
+        },
       })
       lenisRef.current = lenis
 
