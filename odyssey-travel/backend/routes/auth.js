@@ -195,18 +195,81 @@ router.post('/logout', async (req, res) => {
 
 router.get('/me', authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.auth.userId).select('name email')
+    const user = await User.findById(req.auth.userId).select('name email travelProfile')
 
     if (!user) {
       return res.status(404).json({ message: 'Account not found.' })
     }
 
     return res.json({
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        travelProfile: user.travelProfile || {
+          travelStyle: 'Balanced',
+          interests: [],
+          dietaryPreference: 'None',
+          typicalBudgetPerDayINR: 5000,
+          preferredPace: 'Moderate',
+          pastTrips: [],
+        },
+      },
     })
   } catch (error) {
     console.error('Profile lookup failed:', error.message)
     return res.status(500).json({ message: 'Could not load the account.' })
+  }
+})
+
+router.patch('/travel-profile', authenticate, async (req, res) => {
+  try {
+    const {
+      travelStyle,
+      interests,
+      dietaryPreference,
+      typicalBudgetPerDayINR,
+      preferredPace,
+      pastTrips,
+    } = req.body || {}
+
+    const updateFields = {}
+
+    if (travelStyle) updateFields['travelProfile.travelStyle'] = travelStyle
+    if (Array.isArray(interests)) updateFields['travelProfile.interests'] = interests.map((i) => String(i).trim()).filter(Boolean)
+    if (dietaryPreference) updateFields['travelProfile.dietaryPreference'] = dietaryPreference
+    if (Number.isFinite(typicalBudgetPerDayINR)) {
+      updateFields['travelProfile.typicalBudgetPerDayINR'] = Math.max(500, Math.min(500000, Number(typicalBudgetPerDayINR)))
+    }
+    if (preferredPace) updateFields['travelProfile.preferredPace'] = preferredPace
+    if (Array.isArray(pastTrips)) {
+      updateFields['travelProfile.pastTrips'] = pastTrips
+        .filter((trip) => trip && trip.destination && trip.destination.trim())
+        .map((trip) => ({
+          destination: String(trip.destination).trim(),
+          year: Number(trip.year) || new Date().getFullYear(),
+          highlights: String(trip.highlights || '').trim(),
+          rating: Math.max(1, Math.min(5, Number(trip.rating) || 5)),
+        }))
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.auth.userId,
+      { $set: updateFields },
+      { new: true, runValidators: true, select: 'name email travelProfile' },
+    )
+
+    if (!user) {
+      return res.status(404).json({ message: 'Account not found.' })
+    }
+
+    return res.json({
+      message: 'AI Travel Profile saved.',
+      travelProfile: user.travelProfile,
+    })
+  } catch (error) {
+    console.error('Updating travel profile failed:', error.message)
+    return res.status(500).json({ message: 'Failed to update travel profile.' })
   }
 })
 

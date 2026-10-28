@@ -35,17 +35,51 @@ router.get('/my', async (req, res) => {
   }
 })
 
-router.post('/:id/payment/order', async (req, res) => {
+router.post('/:id/payment/simulate', async (req, res) => {
   try {
     if (!mongoose.isValidObjectId(req.params.id)) {
       return res.status(400).json({ message: 'Invalid booking ID.' })
     }
 
-    if (!razorpayEnabled()) {
-      return res.status(503).json({
-        message: 'Razorpay test payments are not configured. The booking remains pending.',
-        paymentEnabled: false,
-      })
+    const { paymentMethod = 'Instant UPI (GooglePay / PhonePe)' } = req.body || {}
+    const booking = await Booking.findOne({
+      _id: req.params.id,
+      user: req.auth.userId,
+    })
+
+    if (!booking) return res.status(404).json({ message: 'Booking not found.' })
+    if (booking.status === 'confirmed') {
+      return res.json({ message: 'Booking already confirmed.', booking })
+    }
+    if (booking.status !== 'pending_payment') {
+      return res.status(409).json({ message: 'This booking is no longer awaiting payment.' })
+    }
+
+    const simPaymentId = `pay_sim_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`
+    const pnr = `ODY-${Math.random().toString(36).substring(2, 8).toUpperCase()}`
+
+    booking.paymentId = simPaymentId
+    booking.paymentOrderId = booking.paymentOrderId || `order_sim_${Date.now()}`
+    booking.paymentMethod = paymentMethod
+    booking.pnr = pnr
+    booking.status = 'confirmed'
+    await booking.save()
+
+    return res.json({
+      message: 'Payment simulation successful! Your booking is confirmed.',
+      booking,
+      pnr,
+    })
+  } catch (error) {
+    console.error('Payment simulation failed:', error.message)
+    return res.status(500).json({ message: 'Could not complete simulated payment.' })
+  }
+})
+
+router.post('/:id/payment/order', async (req, res) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid booking ID.' })
     }
 
     const booking = await Booking.findOne({
@@ -56,6 +90,17 @@ router.post('/:id/payment/order', async (req, res) => {
     if (!booking) return res.status(404).json({ message: 'Booking not found.' })
     if (booking.status !== 'pending_payment') {
       return res.status(409).json({ message: 'This booking is no longer awaiting payment.' })
+    }
+
+    if (!razorpayEnabled()) {
+      return res.json({
+        simulationMode: true,
+        message: 'Sandbox payment simulation active.',
+        id: `order_sim_${Date.now()}`,
+        amount: Math.round(booking.totalINR * 100),
+        currency: 'INR',
+        keyId: null,
+      })
     }
 
     let order
@@ -286,9 +331,10 @@ router.post('/', async (req, res) => {
     }
 
     return res.status(201).json({
-      message: 'Booking created. Payment is still pending.',
+      message: 'Booking request created successfully.',
       booking,
-      paymentEnabled: razorpayEnabled(),
+      paymentEnabled: true,
+      isSandbox: !razorpayEnabled(),
     })
   } catch (error) {
     console.error('Creating booking failed:', error.message)

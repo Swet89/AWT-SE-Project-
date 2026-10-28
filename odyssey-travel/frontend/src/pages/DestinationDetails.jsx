@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import WeatherWidget from '../components/WeatherWidget.jsx'
-
-const API = 'http://localhost:5000/api'
+import AiTravelConcierge from '../components/AiTravelConcierge.jsx'
+import { API } from '../lib/api.js'
 
 export default function DestinationDetails() {
   const { id } = useParams()
@@ -259,6 +259,7 @@ export default function DestinationDetails() {
         className="destination-details-image"
         src={destination.imageUrl}
         alt={destination.name}
+        referrerPolicy="no-referrer"
       />
       {destination.photoCredit && (
         <p className="destination-photo-credit">
@@ -355,12 +356,29 @@ export default function DestinationDetails() {
           'Check local conditions before travelling.'}
       </p>
 
-      <h2>Top attractions</h2>
-      <ul>
-        {(destination.attractions || []).map((attraction) => (
-          <li key={attraction}>{attraction}</li>
-        ))}
-      </ul>
+      <h2>Famous spots to explore</h2>
+      {destination.famousSpots?.length > 0 ? (
+        <div className="destination-spots-gallery">
+          {destination.famousSpots.map((spot, idx) => (
+            <div key={idx} className="spot-gallery-card">
+              <div className="spot-gallery-image-wrap">
+                <img src={spot.imageUrl} alt={spot.name} loading="lazy" referrerPolicy="no-referrer" />
+                <span className="spot-number-tag">Spot {idx + 1}</span>
+              </div>
+              <div className="spot-gallery-info">
+                <h3>{spot.name}</h3>
+                <p>{spot.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <ul className="destination-attraction-fallback-list">
+          {(destination.attractions || []).map((attraction) => (
+            <li key={attraction}>{attraction}</li>
+          ))}
+        </ul>
+      )}
 
       <p>
         Estimated daily budget: ₹
@@ -471,6 +489,13 @@ export default function DestinationDetails() {
             ))}
           </div>
         </section>
+      )}
+
+      {destination && (
+        <AiTravelConcierge
+          destinationId={destination._id}
+          destinationName={destination.name}
+        />
       )}
     </main>
   )

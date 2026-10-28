@@ -43,6 +43,33 @@ const userSchema = new mongoose.Schema(
         ref: 'Destination',
       },
     ],
+    travelProfile: {
+      travelStyle: {
+        type: String,
+        enum: ['Balanced', 'Cultural', 'Adventure', 'Foodie', 'Relaxed', 'Budget'],
+        default: 'Balanced',
+      },
+      interests: [{ type: String, trim: true }],
+      dietaryPreference: {
+        type: String,
+        enum: ['None', 'Vegetarian', 'Vegan', 'Halal', 'Gluten-Free', 'Jain'],
+        default: 'None',
+      },
+      typicalBudgetPerDayINR: { type: Number, default: 5000, min: 500, max: 500000 },
+      preferredPace: {
+        type: String,
+        enum: ['Fast-paced', 'Moderate', 'Slow & leisurely'],
+        default: 'Moderate',
+      },
+      pastTrips: [
+        {
+          destination: { type: String, trim: true, required: true },
+          year: { type: Number },
+          highlights: { type: String, trim: true },
+          rating: { type: Number, min: 1, max: 5 },
+        },
+      ],
+    },
   },
   { timestamps: true },
 )

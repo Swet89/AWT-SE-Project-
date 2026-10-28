@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { showToast } from '../lib/toast.js'
-
-const API = 'http://localhost:5000/api'
+import { API } from '../lib/api.js'
 
 const inr = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -17,6 +16,7 @@ export default function Wayfinder() {
 
   const [destinations, setDestinations] = useState([])
   const [savedItineraries, setSavedItineraries] = useState([])
+  const [userProfile, setUserProfile] = useState(null)
   const [destinationId, setDestinationId] = useState('')
   const [days, setDays] = useState(3)
   const [dailyBudgetINR, setDailyBudgetINR] = useState(5000)
@@ -40,13 +40,21 @@ export default function Wayfinder() {
           signal: controller.signal,
         }
 
-        const [destinationResponse, itineraryResponse] = await Promise.all([
+        const [destinationResponse, itineraryResponse, userResponse] = await Promise.all([
           axios.get(`${API}/destinations`, { signal: controller.signal }),
           axios.get(`${API}/itineraries`, authConfig),
+          axios.get(`${API}/auth/me`, authConfig).catch(() => null),
         ])
 
         setDestinations(destinationResponse.data)
         setSavedItineraries(itineraryResponse.data)
+
+        if (userResponse?.data?.user?.travelProfile) {
+          const prof = userResponse.data.user.travelProfile
+          setUserProfile(prof)
+          if (prof.travelStyle) setTravelStyle(prof.travelStyle)
+          if (prof.typicalBudgetPerDayINR) setDailyBudgetINR(prof.typicalBudgetPerDayINR)
+        }
       } catch (requestError) {
         if (controller.signal.aborted) return
 
@@ -164,6 +172,12 @@ export default function Wayfinder() {
           Tell us what kind of trip you want. Wayfinder will draft a day-by-day
           plan.
         </p>
+        {userProfile && (
+          <div style={{ marginTop: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '0.5rem 1.25rem', background: 'var(--bg-muted, #faf8f5)', borderRadius: '999px', border: '1px solid var(--border, #e5ded3)', fontSize: '0.82rem', color: 'var(--text, inherit)' }}>
+            <span style={{ color: 'var(--gold, #b58b4a)' }}>✨</span>
+            <span>AI Profile Synced: <strong>{userProfile.travelStyle || 'Balanced'}</strong> pace ({userProfile.preferredPace || 'Moderate'}) • <strong>₹{(userProfile.typicalBudgetPerDayINR || 5000).toLocaleString('en-IN')}/day</strong></span>
+          </div>
+        )}
       </header>
 
       {!token && (
@@ -271,6 +285,20 @@ export default function Wayfinder() {
           </div>
 
           <p className="eyebrow dark">{plan.destinationName}</p>
+          {plan.source && (
+            <span style={{
+              display: 'inline-block',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              padding: '0.3rem 0.85rem',
+              borderRadius: '999px',
+              background: 'var(--gold, #b58b4a)',
+              color: '#10232d',
+              marginBottom: '0.75rem'
+            }}>
+              ✨ {plan.source}
+            </span>
+          )}
           <h2>{plan.title}</h2>
           <p>{plan.summary}</p>
 

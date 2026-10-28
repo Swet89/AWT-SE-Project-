@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { API } from '../lib/api.js'
 
 function weatherIcon(code = '') {
   if (code.startsWith('01')) return '☀️'
@@ -38,7 +39,7 @@ export default function WeatherWidget({ destination }) {
     setLoading(true)
 
     try {
-      const response = await axios.get('http://localhost:5000/api/weather', {
+      const response = await axios.get(`${API}/weather`, {
         params: { destinationId: destination._id },
       })
       setWeather(response.data)

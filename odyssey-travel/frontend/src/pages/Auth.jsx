@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { API } from '../lib/api.js'
 import { showToast } from '../lib/toast.js'
 
 export default function Auth() {
@@ -22,7 +23,7 @@ export default function Auth() {
     try {
       const endpoint = isSignup ? 'signup' : 'login'
       const response = await axios.post(
-        `http://localhost:5000/api/auth/${endpoint}`,
+        `${API}/auth/${endpoint}`,
         { name, email, password },
         { withCredentials: true },
       )

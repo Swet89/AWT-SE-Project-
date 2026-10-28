@@ -3,8 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import { TravelOptionSkeleton } from '../components/SkeletonCard.jsx'
 import { showToast } from '../lib/toast.js'
-
-const API = 'http://localhost:5000/api'
+import { API } from '../lib/api.js'
 const kinds = ['flights', 'trains', 'buses', 'cruises', 'hotels', 'rentals', 'hostels']
 const accommodationKinds = ['hotels', 'rentals', 'hostels']
 
@@ -232,6 +231,7 @@ export default function TravelSearch() {
   const [bookingResult, setBookingResult] = useState(null)
   const [submittingBooking, setSubmittingBooking] = useState(false)
   const [paying, setPaying] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('Instant UPI (GooglePay / PhonePe / Paytm)')
   const [paymentError, setPaymentError] = useState('')
   const [paymentMessage, setPaymentMessage] = useState('')
 
@@ -345,6 +345,60 @@ export default function TravelSearch() {
     }
   }
 
+  async function simulatePayment(chosenMethod) {
+    if (!bookingResult?._id) return
+
+    const token = sessionStorage.getItem('odysseyAccessToken')
+    setPaymentError('')
+    setPaymentMessage('')
+    setPaying(true)
+
+    try {
+      const response = await axios.post(
+        `${API}/bookings/${bookingResult._id}/payment/simulate`,
+        { paymentMethod: chosenMethod || paymentMethod },
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+
+      setBookingResult((current) => ({
+        ...current,
+        ...response.data.booking,
+        pnr: response.data.pnr || response.data.booking.pnr,
+        paymentEnabled: true,
+      }))
+      setPaymentMessage('✨ Payment confirmed! Your booking is officially secured.')
+      showToast('Payment confirmed! Reservation secured.')
+    } catch (err) {
+      setPaymentError(
+        err.response?.data?.message || 'Could not complete simulated payment. Please try again.',
+      )
+    } finally {
+      setPaying(false)
+    }
+  }
+
+  async function cancelPendingBooking() {
+    if (!bookingResult?._id) return
+    const confirmed = window.confirm('Cancel this pending booking request?')
+    if (!confirmed) return
+
+    const token = sessionStorage.getItem('odysseyAccessToken')
+    setPaying(true)
+    try {
+      await axios.patch(
+        `${API}/bookings/${bookingResult._id}/cancel`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+      setBookingResult(null)
+      showToast('Booking request cancelled.')
+    } catch (err) {
+      setPaymentError(err.response?.data?.message || 'Could not cancel booking.')
+    } finally {
+      setPaying(false)
+    }
+  }
+
   async function payForBooking() {
     if (!bookingResult?._id) return
 
@@ -360,6 +414,11 @@ export default function TravelSearch() {
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )
+
+      if (orderResponse.data.simulationMode || !orderResponse.data.keyId) {
+        return simulatePayment()
+      }
+
       const checkoutReady = await loadRazorpayCheckout()
       if (!checkoutReady) throw new Error('Could not load Razorpay Checkout. Check your internet connection and try again.')
 
@@ -624,34 +683,150 @@ export default function TravelSearch() {
       )}
 
       {bookingResult && (
-        <section className="booking-confirmation" role="status">
-          <h2>Booking request saved</h2>
-          <p>
-            Reference: <strong>{bookingResult._id}</strong>
-          </p>
-          {bookingResult.couponCode && (
-            <p>
-              Coupon {bookingResult.couponCode} applied: −
-              <strong>{inr.format(bookingResult.discountINR)}</strong>
-            </p>
+        <section className={`booking-confirmation ${bookingResult.status === 'confirmed' ? 'confirmed-pass' : ''}`} role="status">
+          {bookingResult.status === 'confirmed' ? (
+            <div className="ticket-confirmation-wrapper">
+              <div className="ticket-header-badge">
+                <span className="badge-check">✓</span>
+                <div>
+                  <p className="eyebrow dark">ODYSSEY OFFICIAL RESERVATION PASS</p>
+                  <h2 style={{ margin: '4px 0 6px', color: '#18262c' }}>Booking Confirmed!</h2>
+                  <p style={{ margin: 0, fontSize: '0.88rem', color: '#556872' }}>
+                    Your voyage has been reserved. A confirmation summary was sent to <strong>{bookingResult.traveler?.email}</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div className="ticket-boarding-card">
+                <div className="ticket-pnr-banner">
+                  <div>
+                    <span className="ticket-meta-label">BOOKING PNR / TICKET NUMBER</span>
+                    <strong className="ticket-pnr-code">{bookingResult.pnr || `ODY-${bookingResult._id.slice(-6).toUpperCase()}`}</strong>
+                  </div>
+                  <div>
+                    <span className="ticket-status-pill confirmed">● CONFIRMED & ISSUED</span>
+                  </div>
+                </div>
+
+                <div className="ticket-details-grid">
+                  <div className="ticket-field">
+                    <span className="ticket-meta-label">RESERVATION / SERVICE</span>
+                    <strong>{bookingResult.optionSnapshot?.name}</strong>
+                    <span className="ticket-subtext">{bookingResult.optionSnapshot?.kind?.toUpperCase()}</span>
+                  </div>
+
+                  <div className="ticket-field">
+                    <span className="ticket-meta-label">ROUTE / DESTINATION</span>
+                    <strong>
+                      {bookingResult.optionSnapshot?.origin ? `${bookingResult.optionSnapshot.origin} → ` : ''}
+                      {bookingResult.optionSnapshot?.destination}
+                    </strong>
+                  </div>
+
+                  <div className="ticket-field">
+                    <span className="ticket-meta-label">LEAD TRAVELER</span>
+                    <strong>{bookingResult.traveler?.name}</strong>
+                    <span className="ticket-subtext">{bookingResult.quantity} Traveler{bookingResult.quantity > 1 ? 's' : ''}</span>
+                  </div>
+
+                  <div className="ticket-field">
+                    <span className="ticket-meta-label">CONTACT INFO</span>
+                    <strong>{bookingResult.traveler?.phone}</strong>
+                    <span className="ticket-subtext">{bookingResult.traveler?.email}</span>
+                  </div>
+
+                  <div className="ticket-field">
+                    <span className="ticket-meta-label">PAYMENT REFERENCE</span>
+                    <span className="ticket-ref-code">{bookingResult.paymentId || 'pay_verified'}</span>
+                    <span className="ticket-subtext">{bookingResult.paymentMethod || 'Online Verified Payment'}</span>
+                  </div>
+
+                  <div className="ticket-field">
+                    <span className="ticket-meta-label">TOTAL PAID</span>
+                    <strong className="ticket-amount">{inr.format(bookingResult.totalINR)}</strong>
+                    {bookingResult.couponCode && (
+                      <span className="ticket-subtext" style={{ color: '#2e7d32', fontWeight: 600 }}>
+                        Coupon {bookingResult.couponCode} applied (−{inr.format(bookingResult.discountINR)})
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="ticket-actions-row">
+                <button type="button" className="ticket-action-btn primary" onClick={() => window.print()}>
+                  🖨️ Print / Save E-Ticket (PDF)
+                </button>
+                <button type="button" className="ticket-action-btn secondary" onClick={() => navigate('/my-journeys')}>
+                  🎒 View in My Journeys
+                </button>
+                <button type="button" className="ticket-action-btn tertiary" onClick={() => setBookingResult(null)}>
+                  🔍 Search Another Trip
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="pending-payment-wrapper">
+              <h2>Booking Request Saved</h2>
+              <p>Reference: <strong>{bookingResult._id}</strong></p>
+              {bookingResult.couponCode && (
+                <p>Coupon {bookingResult.couponCode} applied: −<strong>{inr.format(bookingResult.discountINR)}</strong></p>
+              )}
+              <p>Total: <strong>{inr.format(bookingResult.totalINR)}</strong></p>
+              <p>Status: <strong style={{ color: '#e65100' }}>Pending payment</strong>. Complete checkout below to issue your ticket.</p>
+
+              <div className="sandbox-payment-selector">
+                <p style={{ fontWeight: 700, margin: '14px 0 8px', fontSize: '0.92rem' }}>
+                  Select Payment Option (Test & Sandbox Mode):
+                </p>
+
+                <div className="payment-options-grid">
+                  {[
+                    { id: 'upi', label: '⚡ Instant UPI (GooglePay / PhonePe / Paytm)', val: 'Instant UPI (GooglePay / PhonePe)' },
+                    { id: 'card', label: '💳 Credit / Debit Card (Visa / Mastercard)', val: 'Credit / Debit Card' },
+                    { id: 'netbanking', label: '🏛️ NetBanking (All Indian Banks)', val: 'NetBanking' },
+                  ].map((m) => (
+                    <label
+                      key={m.id}
+                      className={`payment-option-pill ${paymentMethod === m.val ? 'active' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name="sandboxPaymentMethod"
+                        value={m.val}
+                        checked={paymentMethod === m.val}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <span>{m.label}</span>
+                    </label>
+                  ))}
+                </div>
+
+                <div className="payment-buttons-group">
+                  <button
+                    type="button"
+                    className="complete-pay-btn"
+                    onClick={() => simulatePayment(paymentMethod)}
+                    disabled={paying}
+                  >
+                    {paying ? 'Processing Payment…' : `Pay ${inr.format(bookingResult.totalINR)} & Confirm Ticket`}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="cancel-pending-btn"
+                    onClick={cancelPendingBooking}
+                    disabled={paying}
+                  >
+                    Cancel Request
+                  </button>
+                </div>
+              </div>
+
+              {paymentError && <p className="error-message" role="alert">{paymentError}</p>}
+              {paymentMessage && <p role="status">{paymentMessage}</p>}
+            </div>
           )}
-          <p>
-            Total: <strong>{inr.format(bookingResult.totalINR)}</strong>
-          </p>
-          <p>
-            Status: <strong>{bookingResult.status.replace('_', ' ')}</strong>.
-            {bookingResult.status === 'confirmed' ? ' Payment received.' : ' Payment is still pending.'}
-          </p>
-          {bookingResult.status === 'pending_payment' && bookingResult.paymentEnabled && (
-            <button type="button" onClick={payForBooking} disabled={paying}>
-              {paying ? 'Opening secure checkout…' : 'Pay with Razorpay (test mode)'}
-            </button>
-          )}
-          {bookingResult.status === 'pending_payment' && !bookingResult.paymentEnabled && (
-            <p>Test payment is not configured yet. This booking request is saved and remains pending.</p>
-          )}
-          {paymentError && <p className="error-message" role="alert">{paymentError}</p>}
-          {paymentMessage && <p role="status">{paymentMessage}</p>}
         </section>
       )}
     </main>

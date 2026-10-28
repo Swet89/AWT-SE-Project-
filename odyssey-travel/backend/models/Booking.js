@@ -35,6 +35,8 @@ const bookingSchema = new mongoose.Schema(
     couponCode: { type: String, default: '' },
     paymentOrderId: { type: String, default: '' },
     paymentId: { type: String, default: '' },
+    paymentMethod: { type: String, default: '' },
+    pnr: { type: String, default: '' },
     status: {
       type: String,
       enum: ['pending_payment', 'confirmed', 'cancelled'],

@@ -1,1 +1,10 @@
 odyssey-travel/backend/.env
+odyssey-travel/backend/.env.local
+odyssey-travel/frontend/.env
+odyssey-travel/frontend/.env.local
+odyssey-travel/backend/data/
+odyssey-travel/backend/node_modules/
+odyssey-travel/frontend/node_modules/
+odyssey-travel/frontend/dist/
+.DS_Store
+Thumbs.db

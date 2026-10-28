@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Phaser from 'phaser'
+import { API } from '../lib/api.js'
 
-const API = 'http://localhost:5000/api'
 const AXE_COUNT = 12
 
 function BowGame({ onFinish }) {

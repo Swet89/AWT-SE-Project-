@@ -1,5 +1,14 @@
 const mongoose = require('mongoose')
 
+const spotSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    imageUrl: { type: String, required: true },
+    description: { type: String, default: '' },
+  },
+  { _id: false },
+)
+
 const destinationSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -7,6 +16,7 @@ const destinationSchema = new mongoose.Schema(
     state: { type: String, default: '' },
     description: { type: String, required: true },
     imageUrl: { type: String, default: '' },
+    famousSpots: [spotSchema],
     bestTimeToVisit: { type: String, default: '' },
     averageDailyBudgetINR: { type: Number, default: 0 },
     attractions: [{ type: String }],

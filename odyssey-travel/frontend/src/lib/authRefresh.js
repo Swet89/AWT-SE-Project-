@@ -1,6 +1,6 @@
 import axios from 'axios'
+import { API } from './api.js'
 
-const API = 'http://localhost:5000/api'
 let refreshRequest
 
 function clearLocalSession() {

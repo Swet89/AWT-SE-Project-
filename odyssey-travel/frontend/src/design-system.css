@@ -22,7 +22,37 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+  box-sizing: border-box;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+*::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+*::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+*::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+html, body, #root {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar, #root::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
 html { min-width: 320px; scroll-behavior: smooth; background: var(--odyssey-paper); }
 body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--odyssey-ink); background: var(--odyssey-paper); }
 #root { width: 100%; min-height: 100vh; margin: 0; border: 0; text-align: left; }
@@ -81,6 +111,7 @@ a { color: #866431; text-underline-offset: 3px; }
 .nav-links a:hover, .nav-signout-button:hover { color: var(--odyssey-gold-light); }
 .nav-links a[aria-current='page'] { color: var(--odyssey-gold-light); }
 .sign-in, .nav-control-button, .music-control { border-radius: 999px; }
+.nav-actions-row { display: inline-flex; align-items: center; gap: 10px; }
 .nav-control-button, .music-control { min-height: 36px; padding: 7px 12px; border: 1px solid rgb(228 201 142 / 35%); background: rgb(255 255 255 / 5%); color: #fff8e9; font-size: 11px; }
 
 /* Editorial title hierarchy */
@@ -142,20 +173,52 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .destination-card:hover, .home-destination-card:hover, .related-destination-card:hover { transform: translateY(-6px); border-color: rgb(181 139 74 / 55%); box-shadow: 0 24px 50px rgb(31 39 39 / 15%); }
 .destination-card img, .home-destination-card img { transition: transform .6s var(--odyssey-ease), filter .4s ease; }
 .destination-card:hover img, .home-destination-card:hover img { transform: scale(1.035); filter: saturate(1.08); }
-.destination-card { border-radius: 14px; }
-.destination-card-content { padding: 20px; }
+.destination-card {
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.destination-card-content {
+  padding: 24px 22px 26px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.destination-card-header {
+  display: flex;
+  flex-direction: column;
+}
+.destination-card-body {
+  margin-top: 10px;
+}
+.destination-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.destination-card-actions {
+  margin-top: auto;
+  padding-top: 18px;
+}
 .destination-card h2, .home-destination-card h3 { color: var(--odyssey-ink); }
 .destination-description, .destination-season, .home-destination-budget { color: #647176; }
 .destination-budget { color: #213a40; }
 .favorite-button, .remove-favorite-button { border-radius: 999px; }
 .destination-search input, .destination-sort-control select { border-radius: 9px; }
-.destination-search button { border-radius: 9px; background: var(--odyssey-navy); }
+.destination-search button { border-radius: 10px; background: linear-gradient(135deg, #e3c68f 0%, #caa459 100%) !important; color: #0c1c24 !important; font-weight: 700 !important; }
 
 /* Destination detail layout */
 .destination-details { width: 100%; padding: 42px max(6%, calc((100vw - 1120px) / 2)) 90px; }
 .destination-details-image { display: block; width: 100%; max-height: 590px; border-radius: 20px; object-fit: cover; box-shadow: 0 26px 70px rgb(18 36 43 / 22%); }
 .destination-details > h1 { margin: 12px 0; font-size: clamp(42px, 6vw, 76px); }
-.destination-arrival-info, .trip-budget-calculator, .destination-reviews { margin-top: 28px; padding: 24px; border: 1px solid var(--odyssey-line); border-radius: 15px; background: rgb(255 253 248 / 88%); box-shadow: 0 12px 35px rgb(31 39 39 / 6%); }
+.destination-arrival-info, .trip-budget-calculator, .destination-reviews { margin-top: 28px; padding: 24px; border: 1px solid var(--odyssey-line); border-radius: 15px; background: rgb(255 253 248 / 88%); color: var(--odyssey-ink); box-shadow: 0 12px 35px rgb(31 39 39 / 6%); }
+.destination-arrival-info h2, .trip-budget-calculator h2 { color: var(--odyssey-ink) !important; }
+.destination-arrival-info p { color: #3e505a; }
+.destination-arrival-info p strong { color: var(--odyssey-ink); }
+.trip-budget-fields label { color: var(--odyssey-ink) !important; font-weight: 600; }
+.trip-budget-fields input { background: #ffffff; color: var(--odyssey-ink); border: 1px solid #c9beae; }
+.trip-budget-calculator small { color: #556872 !important; font-weight: 500; }
 .destination-details-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 12px; }
 .detail-favorite-button, .detail-share-button, .destination-map-link { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 10px 16px; border: 1px solid #d4c5a9; border-radius: 9px; background: #fffdf8; color: var(--odyssey-ink); font-weight: 600; text-decoration: none; }
 .plan-trip-button { display: inline-flex; align-items: center; justify-content: center; padding: 12px 17px; text-decoration: none; }
@@ -163,9 +226,16 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .related-destination-card img { width: 100%; aspect-ratio: 1.6; object-fit: cover; }
 
 /* Home hero and its premium glass search */
-.home-hero { min-height: min(820px, calc(100svh - 78px)); height: min(900px, calc(100svh - 78px)); padding-inline: max(8%, calc((100vw - 1440px) / 2)); background-color: #10232d; }
+.home-hero {
+  min-height: calc(100svh - 78px);
+  height: auto;
+  padding-block: clamp(32px, 4.5vh, 60px);
+  padding-inline: max(8%, calc((100vw - 1440px) / 2));
+  background-color: #10232d;
+  box-sizing: border-box;
+}
 .home-hero-overlay { background: linear-gradient(90deg, rgb(8 24 32 / 90%) 0%, rgb(8 24 32 / 64%) 48%, rgb(8 24 32 / 20%) 100%), linear-gradient(0deg, rgb(8 24 32 / 48%), transparent 48%); }
-.home-content h1 { max-width: 760px; font-size: clamp(54px, 7.5vw, 102px); letter-spacing: -.04em; }
+.home-content h1 { max-width: 760px; font-size: clamp(38px, min(6.8vw, 10.5vh), 92px); letter-spacing: -.03em; line-height: 1.12; }
 .home-intro { font-size: clamp(15px, 1.35vw, 18px); }
 .home-search { min-height: 66px; border: 1px solid rgb(245 229 194 / 50%); border-radius: 13px; background: rgb(255 255 255 / 13%); box-shadow: 0 15px 45px rgb(0 0 0 / 16%); backdrop-filter: blur(18px); }
 .home-search button { border-radius: 9px; background: linear-gradient(135deg, #c6a263, #e6ce98); }
@@ -174,14 +244,18 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .travel-marquee { border-color: rgb(228 201 142 / 22%); background: #142d36; }
 .home-discover-section { padding-block: clamp(64px, 8vw, 110px); }
 .home-destination-card { border-radius: 15px; }
-.home-feature-card { border-radius: 18px; }
+.home-feature-card { border-radius: 18px; color: #fffaf0 !important; }
+.home-feature-card h3 { color: #ffffff !important; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45); }
+.home-feature-card p { color: rgba(255, 250, 240, 0.92) !important; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+.home-feature-card > span { color: #ffd88a !important; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+.home-feature-card > b { color: #ffd88a !important; }
 
 /* Search, Wayfinder and booking pages */
 .travel-search-page, .wayfinder-page, .contest-page { padding: clamp(40px, 6vw, 76px) max(6%, calc((100vw - 1150px) / 2)) 90px; }
-.travel-search-heading, .wayfinder-heading, .contest-heading { text-align: center; }
-.travel-search-heading h1, .wayfinder-heading h1, .contest-heading h1 { margin: 12px 0 14px; font-size: clamp(42px, 6.5vw, 76px); }
-.travel-search-heading > p:last-child, .wayfinder-heading > p:last-child, .contest-heading > p:last-child { color: var(--odyssey-muted); }
-.travel-search-form, .wayfinder-form { margin: 34px auto 22px; padding: clamp(20px, 3vw, 34px); border-radius: 18px; }
+.travel-search-heading, .wayfinder-heading, .contest-heading { text-align: center; margin-bottom: clamp(48px, 6vw, 68px); }
+.travel-search-heading h1, .wayfinder-heading h1, .contest-heading h1 { margin: 12px 0 16px; font-size: clamp(42px, 6.5vw, 76px); }
+.travel-search-heading > p:last-child, .wayfinder-heading > p:last-child, .contest-heading > p:last-child { color: var(--odyssey-muted); line-height: 1.7; }
+.travel-search-form, .wayfinder-form { margin: 0 auto 32px; padding: clamp(20px, 3vw, 34px); border-radius: 18px; }
 .travel-search-form label, .wayfinder-form label, .booking-form label { color: #405056; font-weight: 600; }
 .wayfinder-form input, .wayfinder-form select, .wayfinder-form textarea,
 .travel-search-form input, .travel-search-form select, .booking-form input { min-height: 46px; border-radius: 9px; }
@@ -267,6 +341,27 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   background: rgb(27 43 50 / 95%);
   color: #f3eee3;
 }
+:root[data-theme='dark'] .destination-arrival-info h2,
+:root[data-theme='dark'] .trip-budget-calculator h2,
+:root[data-theme='dark'] .destination-details h2 {
+  color: #f7f3eb !important;
+}
+:root[data-theme='dark'] .destination-arrival-info p,
+:root[data-theme='dark'] .destination-arrival-info p strong {
+  color: #f3eee3 !important;
+}
+:root[data-theme='dark'] .trip-budget-fields label {
+  color: #f0ebe1 !important;
+}
+:root[data-theme='dark'] .trip-budget-calculator small {
+  color: #a8b8c0 !important;
+}
+:root[data-theme='dark'] .related-destination-card span {
+  color: #f3eee3 !important;
+}
+:root[data-theme='dark'] .related-destination-card small {
+  color: #a8b8c0 !important;
+}
 :root[data-theme='dark'] input, :root[data-theme='dark'] select,
 :root[data-theme='dark'] textarea, :root[data-theme='dark'] .destination-search input,
 :root[data-theme='dark'] .destination-sort-control select {
@@ -287,24 +382,76 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 :root[data-theme='dark'] .dev-team-heading > p:last-child { color: #b8c5c6; }
 :root[data-theme='dark'] .booking-price-breakdown { background: #22373d; }
 :root[data-theme='dark'] .itinerary-activity { border-color: #405357; }
-:root[data-theme='dark'] .destination-search button { background: #d4b574; color: #14252c; }
+:root[data-theme='dark'] .destination-search button { background: linear-gradient(135deg, #e3c68f 0%, #caa459 100%) !important; color: #0c1c24 !important; font-weight: 700 !important; }
 :root[data-theme='dark'] .home-discover-section, :root[data-theme='dark'] .home-features-section { background: #101c23; color: #f3eee3; }
 :root[data-theme='dark'] .home-section-heading h2 { color: #f3eee3; }
 :root[data-theme='dark'] .home-section-heading p:not(.eyebrow), :root[data-theme='dark'] .home-section-status { color: #b8c5c6; }
 :root[data-theme='dark'] .home-stats-section { background: #0d171d; }
 
+/* Mobile Hamburger & Responsive Navigation */
+.nav-hamburger {
+  display: none;
+  background: transparent;
+  border: 1px solid rgb(228 201 142 / 35%);
+  color: #fff9ee;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.nav-hamburger:hover {
+  background: rgb(228 201 142 / 12%);
+  border-color: var(--odyssey-gold-light);
+}
+
 @media (max-width: 900px) {
   .navbar { padding-inline: 5%; }
-  .nav-links { gap: 12px; }
-  .nav-links a, .nav-signout-button { font-size: 11px; }
+  .nav-hamburger { display: flex; }
+  .nav-links {
+    display: none;
+  }
+  .nav-links.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 78px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(15 34 44 / 98%);
+    backdrop-filter: blur(24px);
+    padding: 2rem 1.5rem 3rem;
+    gap: 1.25rem;
+    overflow-y: auto;
+    z-index: 999;
+    border-top: 1px solid rgb(228 201 142 / 20%);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .nav-links.mobile-open a,
+  .nav-links.mobile-open .nav-signout-button {
+    font-size: 1.2rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgb(255 255 255 / 8%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-links.mobile-open .nav-actions-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    align-items: center;
+  }
 }
 @media (max-width: 700px) {
   .navbar { min-height: 68px; padding: 12px 5%; }
-  .brand { font-size: 10px; letter-spacing: 1px; }
-  .nav-links { max-width: 72%; overflow-x: auto; scrollbar-width: none; }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .nav-links a, .nav-signout-button { display: inline-flex; flex: 0 0 auto; font-size: 10px; }
-  .nav-links .nav-control-button, .nav-links .music-control { display: inline-flex; align-items: center; white-space: nowrap; }
+  .nav-links.mobile-open { top: 68px; }
+  .brand { font-size: 11px; letter-spacing: 1.5px; }
   .home-hero { min-height: calc(100svh - 68px); height: auto; padding: 74px 7% 84px; }
   .home-content h1 { font-size: clamp(48px, 13vw, 72px); }
   .home-search { flex-wrap: wrap; padding: 8px; }
@@ -328,3 +475,538 @@ button:disabled { cursor: not-allowed; opacity: .58; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* ---------- Dark‑mode readability overrides (added by Antigravity) ---------- */
+
+/* New dark‑mode variables */
+:root[data-theme='dark'] {
+  --odyssey-text-muted-dark: #b8c5c6;   /* clearer muted text */
+  --odyssey-bg-muted-dark: #1b2b32;    /* muted background for cards */
+  --odyssey-badge-bg-dark: #2a3c44;     /* badge container */
+  --odyssey-badge-text-dark: #e4c98e;   /* gold‑light text */
+}
+
+/* Placeholders – make them visible */
+:root[data-theme='dark'] input::placeholder,
+:root[data-theme='dark'] textarea::placeholder,
+:root[data-theme='dark'] select::placeholder {
+  color: var(--odyssey-text-muted-dark);
+  opacity: 0.85;
+}
+
+/* Badge / match‑reason styling – improve contrast */
+:root[data-theme='dark'] .match-reason-badge,
+:root[data-theme='dark'] .badge {
+  background: var(--odyssey-badge-bg-dark);
+  color: var(--odyssey-badge-text-dark);
+}
+
+/* AI Concierge chat bubbles – ensure readable contrast */
+:root[data-theme='dark'] .chat-bubble.assistant {
+  background: var(--odyssey-paper);
+  color: var(--odyssey-ink);
+}
+:root[data-theme='dark'] .chat-bubble.user {
+  background: var(--odyssey-navy);
+  color: var(--odyssey-paper-light);
+}
+
+/* Buttons – force readable text */
+:root[data-theme='dark'] .home-search button,
+:root[data-theme='dark'] .auth-form button,
+:root[data-theme='dark'] .wayfinder-form button,
+:root[data-theme='dark'] .travel-search-form button,
+:root[data-theme='dark'] .plan-trip-button {
+  color: var(--odyssey-paper-light);
+}
+
+/* Form inputs – ensure border & background contrast */
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea {
+  border-color: #52666b;
+  background: #12232a;
+  color: var(--odyssey-ink);
+}
+
+/* Muted text used throughout cards & sections */
+:root[data-theme='dark'] .destination-description,
+:root[data-theme='dark'] .destination-season,
+:root[data-theme='dark'] .travel-option p,
+:root[data-theme='dark'] .home-destination-budget,
+:root[data-theme='dark'] .auth-intro,
+:root[data-theme='dark'] .auth-switch,
+:root[data-theme='dark'] .page-message,
+:root[data-theme='dark'] .journeys-email,
+:root[data-theme='dark'] .dev-team-card p,
+:root[data-theme='dark'] .dev-team-note,
+:root[data-theme='dark'] .dev-team-heading > p:last-child {
+  color: var(--odyssey-text-muted-dark);
+}
+
+/* Destination search button – radiant gold with crystal-clear contrast in all modes */
+.destination-search button,
+:root[data-theme='dark'] .destination-search button {
+  background: linear-gradient(135deg, #e3c68f 0%, #caa459 100%) !important;
+  color: #0c1c24 !important;
+  border: 1px solid #c8a355 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 18px rgba(227, 198, 143, 0.35) !important;
+}
+
+.destination-search button:hover,
+:root[data-theme='dark'] .destination-search button:hover {
+  background: linear-gradient(135deg, #ebd6a8 0%, #d4ae64 100%) !important;
+  color: #061014 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(227, 198, 143, 0.5) !important;
+}
+
+/* ================================================================
+   CRITICAL HERO & NAVBAR DARK-MODE VISIBILITY FIXES
+   ================================================================ */
+
+/* Hero Title: Ensure "FIND YOUR WAY" is brilliant and high-contrast in all modes */
+.home-content h1 {
+  color: #fffaf0 !important;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+.home-content h1 em {
+  color: #f3d79b !important;
+}
+
+/* Hero eyebrow line & label */
+.home-content .eyebrow {
+  color: #e4c98e !important;
+}
+.home-content .eyebrow > span {
+  background: #e4c98e !important;
+}
+
+/* Hero Intro text */
+.home-intro {
+  color: rgba(255, 250, 240, 0.88) !important;
+}
+
+/* AI Discovery Prompts in Hero Section */
+.hot-suggestions > span {
+  color: #e4c98e !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.6px !important;
+  opacity: 0.95;
+}
+.hot-suggestions button {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(228, 201, 142, 0.45) !important;
+  color: #fffdf8 !important;
+  font-weight: 500 !important;
+}
+.hot-suggestions button:hover {
+  background: rgba(228, 201, 142, 0.22) !important;
+  border-color: #e4c98e !important;
+  color: #ffffff !important;
+}
+
+/* Navbar Toggle Buttons (Theme Switch & Music Switch) */
+.nav-control-button,
+.music-control {
+  border: 1px solid rgba(228, 201, 142, 0.55) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff9ee !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.nav-control-button:hover,
+.music-control:hover {
+  border-color: #e4c98e !important;
+  background: rgba(228, 201, 142, 0.25) !important;
+  color: #ffffff !important;
+}
+.nav-control-button[aria-pressed='true'],
+.music-control[aria-pressed='true'] {
+  border-color: #e4c98e !important;
+  background: rgba(228, 201, 142, 0.28) !important;
+  color: #fceecb !important;
+}
+
+/* ==========================================================================
+   HIGH CONTRAST & ACCESSIBILITY FIXES (Wayfinder, Rail Buttons, Concierge)
+   ========================================================================== */
+
+/* 1. Wayfinder Headings & Saved Itineraries */
+.saved-itineraries > h2 {
+  color: #18262c !important;
+  font-family: Georgia, serif;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.saved-itineraries > p {
+  color: #3b4d56 !important;
+  font-size: 0.95rem;
+}
+.wayfinder-heading h1 {
+  color: #18262c !important;
+}
+.wayfinder-heading > p:last-child {
+  color: #3b4d56 !important;
+}
+
+:root[data-theme='dark'] .saved-itineraries > h2,
+body[data-theme='dark'] .saved-itineraries > h2,
+:root[data-theme='dark'] .wayfinder-heading h1,
+body[data-theme='dark'] .wayfinder-heading h1 {
+  color: #f7f3eb !important;
+}
+:root[data-theme='dark'] .saved-itineraries > p,
+body[data-theme='dark'] .saved-itineraries > p,
+:root[data-theme='dark'] .wayfinder-heading > p:last-child,
+body[data-theme='dark'] .wayfinder-heading > p:last-child {
+  color: #c5d2d9 !important;
+}
+
+/* 2. Destination Carousel / Rail Navigation Buttons */
+.home-section-actions button {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: all 180ms ease !important;
+}
+
+/* Light mode rail buttons */
+body:not([data-theme='dark']) .home-section-actions button,
+:root:not([data-theme='dark']) .home-section-actions button {
+  border: 1.5px solid #cfc4b1 !important;
+  background: #fffdf8 !important;
+  color: #18252c !important;
+}
+body:not([data-theme='dark']) .home-section-actions button:hover,
+:root:not([data-theme='dark']) .home-section-actions button:hover {
+  background: #18252c !important;
+  color: #fffaf0 !important;
+  border-color: #18252c !important;
+}
+
+/* Dark mode rail buttons (high contrast gold arrows) */
+:root[data-theme='dark'] .home-section-actions button,
+body[data-theme='dark'] .home-section-actions button {
+  border: 1.5px solid rgba(227, 198, 143, 0.65) !important;
+  background: rgba(24, 38, 44, 0.85) !important;
+  color: #ffd88a !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+:root[data-theme='dark'] .home-section-actions button:hover,
+body[data-theme='dark'] .home-section-actions button:hover {
+  background: #ffd88a !important;
+  color: #111a1f !important;
+  border-color: #ffd88a !important;
+}
+:root[data-theme='dark'] .home-section-actions a,
+body[data-theme='dark'] .home-section-actions a {
+  color: #ffd88a !important;
+}
+
+/* 3. AI Concierge Header Contrast */
+.concierge-drawer-header h3,
+aside header h3 {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* ==========================================================================
+   SANDBOX CHECKOUT & CONFIRMED E-TICKET PASS
+   ========================================================================== */
+.booking-confirmation.confirmed-pass {
+  max-width: 680px;
+  border: 1.5px solid rgba(227, 198, 143, 0.45);
+  background: var(--surface-card, #fffdf8);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+}
+
+:root[data-theme='dark'] .booking-confirmation.confirmed-pass {
+  background: #122129;
+  border-color: rgba(227, 198, 143, 0.5);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.4);
+}
+
+.ticket-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border, #e5ded3);
+  margin-bottom: 20px;
+}
+
+.badge-check {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);
+}
+
+.ticket-boarding-card {
+  border: 1px solid var(--border, #e0d7c7);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-muted, #faf8f5);
+  margin-bottom: 22px;
+}
+
+:root[data-theme='dark'] .ticket-boarding-card {
+  background: #172832;
+  border-color: #2b404d;
+}
+
+.ticket-pnr-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--navy, #10232d);
+  color: #f7f3eb;
+  border-bottom: 1px solid rgba(227, 198, 143, 0.3);
+}
+
+.ticket-meta-label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.8px;
+  color: #caa459;
+  font-weight: 700;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+.ticket-pnr-code {
+  font-family: monospace;
+  font-size: 1.35rem;
+  letter-spacing: 2px;
+  color: #fff9ee;
+}
+
+.ticket-status-pill.confirmed {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(46, 125, 50, 0.25);
+  border: 1px solid #4caf50;
+  color: #81c784;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.ticket-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 20px;
+  padding: 20px;
+}
+
+@media (max-width: 600px) {
+  .ticket-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ticket-field strong {
+  display: block;
+  font-size: 0.98rem;
+  color: var(--text-primary, #18262c);
+}
+
+:root[data-theme='dark'] .ticket-field strong {
+  color: #f7f3eb;
+}
+
+.ticket-subtext {
+  display: block;
+  font-size: 0.78rem;
+  color: #6a7c85;
+  margin-top: 2px;
+}
+
+:root[data-theme='dark'] .ticket-subtext {
+  color: #9cb2bd;
+}
+
+.ticket-ref-code {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #caa459;
+  font-weight: 600;
+}
+
+.ticket-amount {
+  font-size: 1.25rem !important;
+  color: #caa459 !important;
+}
+
+.ticket-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.ticket-action-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.ticket-action-btn.primary {
+  background: linear-gradient(135deg, #e3c68f 0%, #caa459 100%);
+  color: #0c1c24;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(202, 164, 89, 0.35);
+}
+
+.ticket-action-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(202, 164, 89, 0.45);
+}
+
+.ticket-action-btn.secondary {
+  background: var(--navy, #10232d);
+  color: #f7f3eb;
+  border: 1px solid rgba(227, 198, 143, 0.4);
+}
+
+.ticket-action-btn.secondary:hover {
+  border-color: #caa459;
+  color: #ffd88a;
+  transform: translateY(-2px);
+}
+
+.ticket-action-btn.tertiary {
+  background: transparent;
+  color: var(--text-muted, #6a7c85);
+  border: 1px solid var(--border, #d8cfbe);
+}
+
+.ticket-action-btn.tertiary:hover {
+  color: var(--text-primary, #18262c);
+  border-color: #caa459;
+}
+
+/* Sandbox Payment Selector */
+.sandbox-payment-selector {
+  margin-top: 18px;
+  padding: 18px 20px;
+  background: var(--bg-muted, #faf8f5);
+  border: 1px solid var(--border, #e5ded3);
+  border-radius: 10px;
+}
+
+:root[data-theme='dark'] .sandbox-payment-selector {
+  background: #172832;
+  border-color: #2b404d;
+}
+
+.payment-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+
+.payment-option-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border, #ded5c5);
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+:root[data-theme='dark'] .payment-option-pill {
+  background: #112028;
+  border-color: #2c424e;
+  color: #f7f3eb;
+}
+
+.payment-option-pill.active {
+  border-color: #caa459 !important;
+  background: rgba(202, 164, 89, 0.12) !important;
+  font-weight: 600;
+}
+
+.payment-buttons-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.complete-pay-btn {
+  flex: 1;
+  min-width: 220px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #e3c68f 0%, #caa459 100%);
+  color: #0c1c24;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(202, 164, 89, 0.35);
+  transition: all 0.2s ease;
+}
+
+.complete-pay-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(202, 164, 89, 0.5);
+}
+
+.complete-pay-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.cancel-pending-btn {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: 1px solid #d8cfbe;
+  background: transparent;
+  color: #6a7c85;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cancel-pending-btn:hover:not(:disabled) {
+  color: #c62828;
+  border-color: #ef9a9a;
+}
+
+
+
