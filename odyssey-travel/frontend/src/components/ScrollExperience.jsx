@@ -109,38 +109,62 @@ export default function ScrollExperience() {
 
     const handled = new WeakSet()
     const reveal = (root) => {
-      if (root instanceof Element && root.matches('[data-reveal]') && !handled.has(root)) {
-        handled.add(root)
-        gsap.fromTo(root, { autoAlpha: 0, y: 18 }, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.58,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: root, start: 'top 90%', once: true },
-        })
-      }
-
-      root.querySelectorAll?.('[data-reveal]').forEach((element) => {
-        if (handled.has(element)) return
+      const applyReveal = (element) => {
+        if (!element || handled.has(element)) return
         handled.add(element)
+
+        const rect = element.getBoundingClientRect()
+        const isAlreadyVisible = rect.top < window.innerHeight && rect.bottom > 0
+        const isPastViewport = rect.bottom <= 0
+
+        if (isPastViewport) {
+          gsap.set(element, { autoAlpha: 1, y: 0 })
+          return
+        }
+
+        if (isAlreadyVisible) {
+          gsap.fromTo(element, { autoAlpha: 0, y: 14 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.45,
+            ease: 'power2.out',
+          })
+          return
+        }
+
         gsap.fromTo(element, { autoAlpha: 0, y: 18 }, {
           autoAlpha: 1,
           y: 0,
           duration: 0.58,
           ease: 'power2.out',
-          scrollTrigger: { trigger: element, start: 'top 90%', once: true },
+          scrollTrigger: { trigger: element, start: 'top 92%', once: true },
         })
-      })
+      }
+
+      if (root instanceof Element && root.matches('[data-reveal]')) {
+        applyReveal(root)
+      }
+
+      root.querySelectorAll?.('[data-reveal]').forEach(applyReveal)
     }
 
     const scope = document.getElementById('root')
     if (!scope) return undefined
     reveal(scope)
 
+    let refreshTimeout
     const observer = new MutationObserver((mutations) => {
+      let hasAdded = false
       mutations.forEach((mutation) => mutation.addedNodes.forEach((node) => {
-        if (node instanceof Element) reveal(node)
+        if (node instanceof Element) {
+          reveal(node)
+          hasAdded = true
+        }
       }))
+      if (hasAdded) {
+        clearTimeout(refreshTimeout)
+        refreshTimeout = setTimeout(() => ScrollTrigger.refresh(), 100)
+      }
     })
     observer.observe(scope, { childList: true, subtree: true })
     const refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh())

@@ -3257,6 +3257,10 @@ body[data-theme='dark'] .saved-itineraries > p {
   color: #f7f3eb;
 }
 
+:root[data-theme='dark'] .destination-sort-control {
+  color: #c4d1d6;
+}
+
 /* Destination search button */
 :root[data-theme='dark'] .destination-search button {
   background: linear-gradient(135deg, #e3c68f 0%, #caa459 100%) !important;

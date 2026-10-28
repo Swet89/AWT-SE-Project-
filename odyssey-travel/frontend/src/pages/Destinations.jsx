@@ -63,7 +63,7 @@ function DestinationCard({ place, isSaved, busyId, toggleFavorite, inr }) {
   }
 
   return (
-    <article className="destination-card" data-reveal key={place._id}>
+    <article className="destination-card" key={place._id}>
       <div className="destination-card-media">
         <img
           src={displayImage}
