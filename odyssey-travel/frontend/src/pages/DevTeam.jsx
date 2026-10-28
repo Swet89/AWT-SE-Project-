@@ -37,7 +37,7 @@ const techStack = [
 export default function DevTeam() {
   return (
     <main className="dev-team-page" style={{ maxWidth: '1100px', margin: 'clamp(3.5rem, 5vw, 5.5rem) auto 6rem', padding: '0 clamp(1.25rem, 3vw, 2.5rem)' }}>
-      <header className="dev-team-heading" style={{ textAlign: 'center', marginBottom: 'clamp(3.75rem, 6.5vw, 5.5rem)' }}>
+      <header className="dev-team-heading" style={{ textAlign: 'center', marginBottom: 'clamp(5.5rem, 8vw, 8rem)' }}>
         <p className="eyebrow dark" style={{ marginBottom: '0.75rem' }}>THE ARCHITECTS OF MODERN TRAVEL</p>
         <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)', margin: '0.5rem 0 1.25rem', letterSpacing: '-0.02em' }}>
           Crafted for the Modern Explorer.

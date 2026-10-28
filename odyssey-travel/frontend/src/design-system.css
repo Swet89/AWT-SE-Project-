@@ -252,7 +252,7 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 
 /* Search, Wayfinder and booking pages */
 .travel-search-page, .wayfinder-page, .contest-page { padding: clamp(40px, 6vw, 76px) max(6%, calc((100vw - 1150px) / 2)) 90px; }
-.travel-search-heading, .wayfinder-heading, .contest-heading { text-align: center; margin-bottom: clamp(48px, 6vw, 68px); }
+.travel-search-heading, .wayfinder-heading, .contest-heading { text-align: center; margin-bottom: clamp(60px, 8vw, 96px); }
 .travel-search-heading h1, .wayfinder-heading h1, .contest-heading h1 { margin: 12px 0 16px; font-size: clamp(42px, 6.5vw, 76px); }
 .travel-search-heading > p:last-child, .wayfinder-heading > p:last-child, .contest-heading > p:last-child { color: var(--odyssey-muted); line-height: 1.7; }
 .travel-search-form, .wayfinder-form { margin: 0 auto 32px; padding: clamp(20px, 3vw, 34px); border-radius: 18px; }

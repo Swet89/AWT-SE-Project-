@@ -676,7 +676,7 @@ button {
 }
 
 .destinations-heading {
-  margin: 0 auto clamp(48px, 6vw, 68px);
+  margin: 0 auto clamp(56px, 7.5vw, 88px);
   text-align: center;
 }
 
@@ -1331,7 +1331,7 @@ button {
 }
 
 .journeys-heading {
-  margin-bottom: clamp(36px, 5vw, 54px);
+  margin-bottom: clamp(52px, 7vw, 84px);
 }
 
 .journeys-heading h1,
@@ -1703,7 +1703,7 @@ button {
 
 .contest-heading {
   max-width: 760px;
-  margin: 0 auto clamp(48px, 6vw, 68px);
+  margin: 0 auto clamp(60px, 8vw, 96px);
   text-align: center;
 }
 
@@ -1852,7 +1852,7 @@ button {
 }
 
 .travel-search-heading {
-  margin: 0 auto clamp(48px, 6vw, 68px);
+  margin: 0 auto clamp(60px, 8vw, 96px);
   text-align: center;
 }
 
@@ -2556,7 +2556,7 @@ button {
 }
 
 .wayfinder-heading {
-  margin: 0 auto clamp(48px, 6vw, 68px);
+  margin: 0 auto clamp(60px, 8vw, 96px);
   text-align: center;
 }
 

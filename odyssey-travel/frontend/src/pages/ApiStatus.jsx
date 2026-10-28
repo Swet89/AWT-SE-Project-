@@ -31,7 +31,7 @@ export default function ApiStatus() {
 
   return (
     <main className="welcome-page" style={{ maxWidth: '680px', margin: 'clamp(4rem, 6vw, 6rem) auto 4rem', padding: '0 1.5rem' }}>
-      <header style={{ textAlign: 'center', marginBottom: 'clamp(3rem, 5vw, 4.5rem)' }}>
+      <header style={{ textAlign: 'center', marginBottom: 'clamp(4.5rem, 7vw, 6.5rem)' }}>
         <p className="eyebrow dark" style={{ marginBottom: '0.65rem' }}>SYSTEM DIAGNOSTICS</p>
         <h1 style={{ fontFamily: 'var(--font-heading, "Cinzel", Georgia, serif)', fontSize: 'clamp(2.2rem, 4.5vw, 3.25rem)', margin: '0.5rem 0 1rem' }}>
           Odyssey System Health

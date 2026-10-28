@@ -82,26 +82,26 @@ export default function Contact() {
   }
 
   return (
-    <main className="contact-page" style={{ maxWidth: '1100px', margin: 'clamp(3.5rem, 5vw, 5.5rem) auto 6rem', padding: '0 clamp(1.25rem, 3vw, 2.5rem)' }}>
-      <header className="contact-heading" style={{ textAlign: 'center', marginBottom: 'clamp(3.75rem, 6.5vw, 5.5rem)' }}>
-        <p className="eyebrow dark" style={{ marginBottom: '0.75rem' }}>WE’RE HERE FOR YOUR JOURNEY</p>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.2rem, 4.5vw, 3.5rem)', margin: '0.5rem 0 1.25rem', letterSpacing: '-0.02em' }}>
+    <main className="contact-page" style={{ maxWidth: '1120px', margin: 'clamp(4rem, 6vw, 6.5rem) auto 7rem', padding: '0 clamp(1.5rem, 3.5vw, 3rem)' }}>
+      <header className="contact-heading" style={{ textAlign: 'center', marginBottom: 'clamp(5.5rem, 9vw, 8.5rem)' }}>
+        <p className="eyebrow dark" style={{ marginBottom: '1rem', letterSpacing: '0.14em' }}>WE’RE HERE FOR YOUR JOURNEY</p>
+        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 3.85rem)', margin: '0.75rem 0 1.5rem', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
           Connect with Odyssey Concierge
         </h1>
-        <p style={{ maxWidth: '640px', margin: '0 auto', color: 'var(--text-muted, #555)', fontSize: '1.12rem', lineHeight: 1.7 }}>
+        <p style={{ maxWidth: '640px', margin: '0 auto', color: 'var(--text-muted, #555)', fontSize: '1.18rem', lineHeight: 1.75 }}>
           Have questions about an upcoming voyage, personalized AI trip curation, or special booking requests? Let us know.
         </p>
       </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: 'clamp(2rem, 3.5vw, 3rem)', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: 'clamp(2.25rem, 4vw, 3.5rem)', alignItems: 'start' }}>
         {/* Left Column: Form or Success Card */}
         <section
           style={{
             background: 'var(--surface, #ffffff)',
             border: '1px solid var(--border, #e5ded3)',
-            borderRadius: '20px',
-            padding: 'clamp(1.75rem, 3vw, 2.5rem)',
-            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.04)',
+            borderRadius: '24px',
+            padding: 'clamp(2rem, 3.5vw, 3rem)',
+            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.05)',
           }}
         >
           {ticket ? (
