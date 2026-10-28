@@ -36,16 +36,24 @@ const techStack = [
 
 export default function DevTeam() {
   return (
-    <main className="dev-team-page" style={{ maxWidth: '1100px', margin: 'clamp(3.5rem, 5vw, 5.5rem) auto 6rem', padding: '0 clamp(1.25rem, 3vw, 2.5rem)' }}>
-      <header className="dev-team-heading" style={{ textAlign: 'center', marginBottom: 'clamp(5.5rem, 8vw, 8rem)' }}>
-        <p className="eyebrow dark" style={{ marginBottom: '0.75rem' }}>THE ARCHITECTS OF MODERN TRAVEL</p>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)', margin: '0.5rem 0 1.25rem', letterSpacing: '-0.02em' }}>
-          Crafted for the Modern Explorer.
-        </h1>
-        <p style={{ maxWidth: '680px', margin: '0 auto', fontSize: '1.15rem', color: 'var(--text-muted, #555)', lineHeight: 1.7 }}>
-          Odyssey Travel merges thoughtful editorial design, spatial WebGL visuals, and intelligent algorithmic curation to turn wanderlust into seamless itineraries.
-        </p>
-      </header>
+    <main
+      className="dev-team-page"
+      style={{
+        padding: 'clamp(64px, 8vw, 104px) clamp(1.25rem, 3vw, 2.5rem) 100px',
+        boxSizing: 'border-box',
+        minHeight: 'calc(100vh - 80px)',
+      }}
+    >
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <header className="dev-team-heading" style={{ textAlign: 'center', marginBottom: 'clamp(5.5rem, 8vw, 8rem)' }}>
+          <p className="eyebrow dark" style={{ marginBottom: '1.25rem', letterSpacing: '0.14em' }}>THE ARCHITECTS OF MODERN TRAVEL</p>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)', margin: '0.5rem 0 1.25rem', letterSpacing: '-0.02em' }}>
+            Crafted for the Modern Explorer.
+          </h1>
+          <p style={{ maxWidth: '680px', margin: '0 auto', fontSize: '1.15rem', color: 'var(--text-muted, #555)', lineHeight: 1.7 }}>
+            Odyssey Travel merges thoughtful editorial design, spatial WebGL visuals, and intelligent algorithmic curation to turn wanderlust into seamless itineraries.
+          </p>
+        </header>
 
       {/* Team Profiles Section */}
       <section style={{ marginBottom: '4rem' }}>
@@ -203,6 +211,7 @@ export default function DevTeam() {
         >
           Check System Diagnostics ⚙
         </Link>
+      </div>
       </div>
     </main>
   )

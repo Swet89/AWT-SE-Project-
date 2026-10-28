@@ -30,16 +30,24 @@ export default function ApiStatus() {
   }, [])
 
   return (
-    <main className="welcome-page" style={{ maxWidth: '680px', margin: 'clamp(4rem, 6vw, 6rem) auto 4rem', padding: '0 1.5rem' }}>
-      <header style={{ textAlign: 'center', marginBottom: 'clamp(4.5rem, 7vw, 6.5rem)' }}>
-        <p className="eyebrow dark" style={{ marginBottom: '0.65rem' }}>SYSTEM DIAGNOSTICS</p>
-        <h1 style={{ fontFamily: 'var(--font-heading, "Cinzel", Georgia, serif)', fontSize: 'clamp(2.2rem, 4.5vw, 3.25rem)', margin: '0.5rem 0 1rem' }}>
-          Odyssey System Health
-        </h1>
-        <p style={{ maxWidth: '540px', margin: '0 auto', color: 'var(--text-muted, #666)', fontSize: '1.05rem', lineHeight: 1.65 }}>
-          Live health and connectivity check for backend services, database clusters, and AI engines.
-        </p>
-      </header>
+    <main
+      className="welcome-page"
+      style={{
+        padding: 'clamp(64px, 8vw, 104px) 1.5rem 100px',
+        boxSizing: 'border-box',
+        minHeight: 'calc(100vh - 80px)',
+      }}
+    >
+      <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+        <header style={{ textAlign: 'center', marginBottom: 'clamp(4.5rem, 7vw, 6.5rem)' }}>
+          <p className="eyebrow dark" style={{ marginBottom: '1.25rem', letterSpacing: '0.14em' }}>SYSTEM DIAGNOSTICS</p>
+          <h1 style={{ fontFamily: 'var(--font-heading, "Cinzel", Georgia, serif)', fontSize: 'clamp(2.2rem, 4.5vw, 3.25rem)', margin: '0.5rem 0 1rem' }}>
+            Odyssey System Health
+          </h1>
+          <p style={{ maxWidth: '540px', margin: '0 auto', color: 'var(--text-muted, #666)', fontSize: '1.05rem', lineHeight: 1.65 }}>
+            Live health and connectivity check for backend services, database clusters, and AI engines.
+          </p>
+        </header>
 
       <div style={{
         padding: '2.25rem',
@@ -96,6 +104,7 @@ export default function ApiStatus() {
           </button>
           <Link to="/" style={{ color: 'var(--text-muted, #666)' }}>← Return home</Link>
         </div>
+      </div>
       </div>
     </main>
   )

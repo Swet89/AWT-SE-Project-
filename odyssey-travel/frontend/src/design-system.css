@@ -251,7 +251,7 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .home-feature-card > b { color: #ffd88a !important; }
 
 /* Search, Wayfinder and booking pages */
-.travel-search-page, .wayfinder-page, .contest-page { padding: clamp(40px, 6vw, 76px) max(6%, calc((100vw - 1150px) / 2)) 90px; }
+.travel-search-page, .wayfinder-page, .contest-page { padding: clamp(64px, 8vw, 104px) max(6%, calc((100vw - 1150px) / 2)) 90px; }
 .travel-search-heading, .wayfinder-heading, .contest-heading { text-align: center; margin-bottom: clamp(60px, 8vw, 96px); }
 .travel-search-heading h1, .wayfinder-heading h1, .contest-heading h1 { margin: 12px 0 16px; font-size: clamp(42px, 6.5vw, 76px); }
 .travel-search-heading > p:last-child, .wayfinder-heading > p:last-child, .contest-heading > p:last-child { color: var(--odyssey-muted); line-height: 1.7; }
@@ -279,7 +279,7 @@ button:disabled { cursor: not-allowed; opacity: .58; }
 .auth-card h1 { color: var(--odyssey-ink); }
 .auth-intro, .auth-switch { color: var(--odyssey-muted); }
 .journeys-panel { max-width: 1040px; }
-.journeys-page, .destinations-page { padding-block: clamp(42px, 6vw, 76px) 90px; }
+.journeys-page, .destinations-page { padding-block: clamp(64px, 8vw, 104px) 90px; }
 .saved-section { margin-top: 44px; }
 .saved-section > h2 { color: var(--odyssey-ink); font-family: 'Cinzel', Georgia, serif; font-size: clamp(25px, 3vw, 34px); }
 .profile-summary, .booking-history-main, .saved-itinerary-header { gap: 22px; }

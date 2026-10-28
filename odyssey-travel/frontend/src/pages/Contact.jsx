@@ -82,18 +82,26 @@ export default function Contact() {
   }
 
   return (
-    <main className="contact-page" style={{ maxWidth: '1120px', margin: 'clamp(4rem, 6vw, 6.5rem) auto 7rem', padding: '0 clamp(1.5rem, 3.5vw, 3rem)' }}>
-      <header className="contact-heading" style={{ textAlign: 'center', marginBottom: 'clamp(5.5rem, 9vw, 8.5rem)' }}>
-        <p className="eyebrow dark" style={{ marginBottom: '1rem', letterSpacing: '0.14em' }}>WE’RE HERE FOR YOUR JOURNEY</p>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 3.85rem)', margin: '0.75rem 0 1.5rem', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
-          Connect with Odyssey Concierge
-        </h1>
-        <p style={{ maxWidth: '640px', margin: '0 auto', color: 'var(--text-muted, #555)', fontSize: '1.18rem', lineHeight: 1.75 }}>
-          Have questions about an upcoming voyage, personalized AI trip curation, or special booking requests? Let us know.
-        </p>
-      </header>
+    <main
+      className="contact-page"
+      style={{
+        padding: 'clamp(64px, 8vw, 104px) clamp(1.5rem, 3.5vw, 3rem) 100px',
+        boxSizing: 'border-box',
+        minHeight: 'calc(100vh - 80px)',
+      }}
+    >
+      <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+        <header className="contact-heading" style={{ textAlign: 'center', marginBottom: 'clamp(5.5rem, 9vw, 8.5rem)' }}>
+          <p className="eyebrow dark" style={{ marginBottom: '1.25rem', letterSpacing: '0.14em' }}>WE’RE HERE FOR YOUR JOURNEY</p>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 3.85rem)', margin: '0.75rem 0 1.5rem', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
+            Connect with Odyssey Concierge
+          </h1>
+          <p style={{ maxWidth: '640px', margin: '0 auto', color: 'var(--text-muted, #555)', fontSize: '1.18rem', lineHeight: 1.75 }}>
+            Have questions about an upcoming voyage, personalized AI trip curation, or special booking requests? Let us know.
+          </p>
+        </header>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: 'clamp(2.25rem, 4vw, 3.5rem)', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: 'clamp(2.25rem, 4vw, 3.5rem)', alignItems: 'start' }}>
         {/* Left Column: Form or Success Card */}
         <section
           style={{
@@ -472,6 +480,7 @@ export default function Contact() {
             </Link>
           </div>
         </section>
+      </div>
       </div>
     </main>
   )

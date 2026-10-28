@@ -670,7 +670,7 @@ button {
 
 .destinations-page {
   min-height: calc(100vh - 80px);
-  padding: 55px 7.5% 80px;
+  padding: clamp(64px, 8vw, 104px) 7.5% 80px;
   background: #f6f2e9;
   color: #18252c;
 }
@@ -1320,7 +1320,7 @@ button {
 }
 .journeys-page {
   min-height: calc(100vh - 80px);
-  padding: 55px 7.5% 80px;
+  padding: clamp(64px, 8vw, 104px) 7.5% 80px;
   background: #f6f2e9;
   color: #18252c;
 }
@@ -1696,7 +1696,7 @@ button {
 
 .contest-page {
   min-height: calc(100vh - 80px);
-  padding: 54px 7.5% 80px;
+  padding: clamp(64px, 8vw, 104px) 7.5% 80px;
   background: #f6f2e9;
   color: #18252c;
 }
@@ -2551,7 +2551,7 @@ button {
 }
 .wayfinder-page {
   width: min(1000px, calc(100% - 32px));
-  margin: 48px auto 80px;
+  margin: clamp(60px, 8vw, 96px) auto 80px;
   color: #18262c;
 }
 
