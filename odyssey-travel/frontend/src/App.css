@@ -2846,6 +2846,77 @@ body[data-theme='dark'] .saved-itineraries > p {
   background: rgb(217 183 119 / 20%);
 }
 
+.music-control-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.music-control.is-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, rgba(228, 201, 142, 0.28), rgba(64, 223, 207, 0.16)) !important;
+  border-color: #ffd88a !important;
+  color: #fff9ee !important;
+  box-shadow: 0 2px 12px rgba(228, 201, 142, 0.25) !important;
+}
+
+.music-track-title {
+  font-weight: 600;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-next-button {
+  padding: 6px 9px;
+  border: 1px solid rgba(228, 201, 142, 0.45);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f7f3eb;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.music-next-button:hover {
+  background: rgba(228, 201, 142, 0.28);
+  border-color: #ffd88a;
+  color: #ffffff;
+  transform: scale(1.06);
+}
+
+.music-wave-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.wave-bar {
+  display: block;
+  width: 2.5px;
+  background: #ffd88a;
+  border-radius: 999px;
+  animation: musicWaveAnim 1.1s ease-in-out infinite alternate;
+}
+
+.wave-bar.bar-1 { height: 5px; animation-delay: 0.1s; }
+.wave-bar.bar-2 { height: 11px; animation-delay: 0.35s; }
+.wave-bar.bar-3 { height: 7px; animation-delay: 0.6s; }
+
+@keyframes musicWaveAnim {
+  0% { height: 3px; opacity: 0.55; }
+  50% { height: 12px; opacity: 1; }
+  100% { height: 5px; opacity: 0.75; }
+}
+
 .dev-team-page,
 .not-found-page {
   min-height: calc(100vh - 80px);
