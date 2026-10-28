@@ -60,14 +60,49 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
     }
   }, [initialPrompt])
 
+  // Directly listen to wheel events on the messages container so mouse wheel/trackpad scrolling ALWAYS works
   useEffect(() => {
-    if (isOpen) {
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
-      } else {
-        chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }
+    const el = messagesContainerRef.current
+    if (!el || !isOpen) return
+
+    const handleWheel = (e) => {
+      e.stopPropagation()
+      el.scrollTop += e.deltaY
+      if (e.cancelable) e.preventDefault()
     }
+
+    el.addEventListener('wheel', handleWheel, { passive: false })
+    return () => el.removeEventListener('wheel', handleWheel)
+  }, [isOpen])
+
+  // Smart scroll when messages update:
+  // - If an assistant response arrives, scroll to the START of the assistant response so user reads from the beginning!
+  // - If user sends a message, scroll to bottom to see their sent bubble and the thinking indicator.
+  useEffect(() => {
+    if (!isOpen || !messagesContainerRef.current) return
+
+    const container = messagesContainerRef.current
+    const lastMsg = messages[messages.length - 1]
+
+    if (lastMsg?.sender === 'assistant' && lastMsg.id !== 'welcome') {
+      // Find the last assistant message and bring its top into view
+      const timer = setTimeout(() => {
+        const assistantItems = container.querySelectorAll('.concierge-message-item.is-assistant')
+        const lastItem = assistantItems[assistantItems.length - 1]
+        if (lastItem) {
+          container.scrollTo({
+            top: Math.max(0, lastItem.offsetTop - 14),
+            behavior: 'smooth',
+          })
+        }
+      }, 50)
+      return () => clearTimeout(timer)
+    }
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: 'smooth',
+    })
   }, [messages, isOpen])
 
   async function sendMessage(textToSend) {
@@ -263,9 +298,10 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
               return (
                 <div
                   key={msg.id}
+                  className={`concierge-message-item ${isMe ? 'is-user' : 'is-assistant'}`}
                   style={{
                     alignSelf: isMe ? 'flex-end' : 'flex-start',
-                    maxWidth: '85%',
+                    maxWidth: '88%',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: isMe ? 'flex-end' : 'flex-start',
@@ -306,8 +342,8 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
                       style={{
                         display: 'flex',
                         flexWrap: 'wrap',
-                        gap: '0.35rem',
-                        marginTop: '0.5rem',
+                        gap: '0.4rem',
+                        marginTop: '0.6rem',
                       }}
                     >
                       {msg.suggestedActions.map((action, idx) => (
@@ -316,22 +352,25 @@ export default function AiTravelConcierge({ destinationId, destinationName, init
                           type="button"
                           onClick={() => sendMessage(action)}
                           style={{
-                            padding: '0.3rem 0.65rem',
-                            fontSize: '0.75rem',
+                            padding: '0.35rem 0.75rem',
+                            fontSize: '0.76rem',
+                            fontWeight: 500,
                             borderRadius: '999px',
                             background: 'var(--surface, #ffffff)',
                             border: '1px solid var(--border, #d8cfbe)',
                             color: 'var(--text, #10232d)',
                             cursor: 'pointer',
-                            transition: 'all 0.15s ease',
+                            transition: 'all 0.18s ease',
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.borderColor = 'var(--gold, #b58b4a)'
                             e.currentTarget.style.color = 'var(--gold, #b58b4a)'
+                            e.currentTarget.style.background = 'rgba(202, 164, 89, 0.12)'
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.borderColor = 'var(--border, #d8cfbe)'
                             e.currentTarget.style.color = 'var(--text, #10232d)'
+                            e.currentTarget.style.background = 'var(--surface, #ffffff)'
                           }}
                         >
                           {action} →

@@ -22,6 +22,14 @@ export default function CustomCursor() {
 
     function moveCursor(event) {
       if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
+      const target = event.target instanceof Element ? event.target : null
+
+      // If hovering inside the chatbot window or standard form inputs, disable custom cursor so native cursor is used
+      if (target?.closest('.odyssey-chat-window, input, textarea, select')) {
+        root.classList.remove('is-active')
+        return
+      }
+
       root.classList.add('is-active')
       document.documentElement.dataset.customCursor = 'active'
       x = event.clientX

@@ -1081,5 +1081,29 @@ aside header h3 {
   border-color: #ef9a9a;
 }
 
+/* Ensure chatbot window and form inputs retain natural native cursor */
+:root[data-custom-cursor='active'] .odyssey-chat-window,
+:root[data-custom-cursor='active'] .odyssey-chat-window *,
+:root[data-custom-cursor='active'] input,
+:root[data-custom-cursor='active'] textarea,
+:root[data-custom-cursor='active'] select {
+  cursor: auto !important;
+}
+
+:root[data-custom-cursor='active'] .odyssey-chat-window input,
+:root[data-custom-cursor='active'] input[type="text"],
+:root[data-custom-cursor='active'] input[type="email"],
+:root[data-custom-cursor='active'] input[type="password"],
+:root[data-custom-cursor='active'] input[type="search"],
+:root[data-custom-cursor='active'] textarea {
+  cursor: text !important;
+}
+
+:root[data-custom-cursor='active'] .odyssey-chat-window button,
+:root[data-custom-cursor='active'] button,
+:root[data-custom-cursor='active'] a {
+  cursor: pointer !important;
+}
+
 
 
