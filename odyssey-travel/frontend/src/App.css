@@ -1642,15 +1642,26 @@ button {
 }
 
 .view-itinerary-button {
-  margin-top: 14px;
-  padding: 10px 12px;
+  margin-top: 8px;
+  padding: 9px 14px;
   border: 1px solid #d6cbb9;
-  border-radius: 4px;
-  background: transparent;
+  border-radius: 8px;
+  background: #fffdf8;
   color: #18252c;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.view-itinerary-button:hover {
+  background: #f4ecdc;
+  border-color: #caa459;
+  color: #0c1c24;
 }
 
 .saved-itinerary-details {
@@ -3113,6 +3124,58 @@ body[data-theme='dark'] .saved-itineraries > p {
 
 :root[data-theme='dark'] .saved-itinerary-actions strong {
   color: #e4c98e;
+}
+
+/* Action buttons in Journeys, Booking History & Saved Plans */
+:root[data-theme='dark'] .view-itinerary-button,
+body[data-theme='dark'] .view-itinerary-button,
+:root[data-theme='dark'] .booking-history-actions .view-itinerary-button,
+:root[data-theme='dark'] .saved-itinerary-actions .view-itinerary-button {
+  color: #f7f3eb !important;
+  border-color: rgba(228, 201, 142, 0.45) !important;
+  background: rgba(228, 201, 142, 0.1) !important;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+:root[data-theme='dark'] .view-itinerary-button:hover,
+body[data-theme='dark'] .view-itinerary-button:hover,
+:root[data-theme='dark'] .booking-history-actions .view-itinerary-button:hover,
+:root[data-theme='dark'] .saved-itinerary-actions .view-itinerary-button:hover {
+  background: rgba(228, 201, 142, 0.22) !important;
+  border-color: #ffd88a !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(228, 201, 142, 0.25);
+}
+
+:root[data-theme='dark'] .edit-profile-button,
+:root[data-theme='dark'] .profile-edit-actions button {
+  color: #f7f3eb !important;
+  border-color: rgba(228, 201, 142, 0.45) !important;
+  background: rgba(228, 201, 142, 0.1) !important;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .edit-profile-button:hover,
+:root[data-theme='dark'] .profile-edit-actions button:hover {
+  background: rgba(228, 201, 142, 0.22) !important;
+  border-color: #ffd88a !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .remove-favorite-button {
+  color: #ff9b9b !important;
+  border-color: rgba(239, 154, 154, 0.45) !important;
+  background: rgba(211, 47, 47, 0.12) !important;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .remove-favorite-button:hover {
+  background: rgba(211, 47, 47, 0.25) !important;
+  border-color: #ef9a9a !important;
+  color: #ffffff !important;
 }
 
 /* Booking Details Expansion & Text */
