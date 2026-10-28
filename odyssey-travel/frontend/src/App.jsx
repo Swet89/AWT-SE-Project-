@@ -159,59 +159,56 @@ export default function App() {
       <ScrollExperience />
       <CustomCursor />
       <ToastViewport />
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          className="route-transition"
-          key={location.pathname}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.24, ease: 'easeOut' }}
-        >
-          <Routes location={location}>
-            <Route path="/" element={<Home />} />
-            <Route path="/destinations" element={<Destinations />} />
-            <Route path="/destinations/:id" element={<DestinationDetails />} />
-            <Route path="/login" element={<Auth />} />
-            <Route path="/signup" element={<Auth />} />
-            <Route path="/search/:kind" element={<TravelSearch />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/team" element={<DevTeam />} />
-            <Route path="/status" element={<ApiStatus />} />
+      <motion.div
+        className="route-transition"
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, ease: 'easeOut' }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/destinations/:id" element={<DestinationDetails />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/signup" element={<Auth />} />
+          <Route path="/search/:kind" element={<TravelSearch />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/team" element={<DevTeam />} />
+          <Route path="/status" element={<ApiStatus />} />
 
-            <Route
-              path="/journeys"
-              element={
-                <ProtectedRoute>
-                  <MyJourneys />
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/journeys"
+            element={
+              <ProtectedRoute>
+                <MyJourneys />
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/wayfinder"
-              element={
-                <ProtectedRoute>
-                  <Wayfinder />
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/wayfinder"
+            element={
+              <ProtectedRoute>
+                <Wayfinder />
+              </ProtectedRoute>
+            }
+          />
 
-            <Route
-              path="/contest"
-              element={
-                <ProtectedRoute>
-                  <Suspense fallback={<main className="page-message">Loading the contest…</main>}>
-                    <ContestOfBow />
-                  </Suspense>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/contest"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<main className="page-message">Loading the contest…</main>}>
+                  <ContestOfBow />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </motion.div>
-      </AnimatePresence>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </motion.div>
 
       <AiTravelConcierge />
     </>

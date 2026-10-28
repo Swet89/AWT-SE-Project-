@@ -26,7 +26,6 @@ export default function Interactive3DEarth({
   const [hoveredDest, setHoveredDest] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [isHoveringMarker, setIsHoveringMarker] = useState(false)
-  const [zoomLevel, setZoomLevel] = useState(1)
 
   // Internal 3D scene state refs (to avoid re-renders on animation loops)
   const sceneStateRef = useRef({
@@ -417,12 +416,24 @@ export default function Interactive3DEarth({
     domElement.addEventListener('touchmove', onTouchMove, { passive: false })
     domElement.addEventListener('touchend', onTouchEnd)
 
-    // 11. Render Animation Loop
+    // 11. Render Animation Loop & Viewport Visibility Pausing
     let clock = new THREE.Clock()
+    let isVisible = true
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting
+    }, { threshold: 0.02 })
+
+    if (container) {
+      visibilityObserver.observe(container)
+    }
 
     const animate = () => {
       if (state.isDestroyed) return
       state.animationFrameId = requestAnimationFrame(animate)
+
+      // Skip GPU rendering completely when globe is scrolled out of viewport
+      if (!isVisible) return
 
       const delta = clock.getDelta()
       const elapsedTime = clock.getElapsedTime()
@@ -430,7 +441,6 @@ export default function Interactive3DEarth({
       // Smooth camera zoom interpolation
       state.currentCameraDistance += (state.targetCameraDistance - state.currentCameraDistance) * 0.1
       camera.position.z = state.currentCameraDistance
-      setZoomLevel(Number(((state.baseCameraDistance / state.currentCameraDistance)).toFixed(2)))
 
       // Idle Rotation logic
       const isCardActive = Boolean(isCardOpen)
@@ -505,6 +515,7 @@ export default function Interactive3DEarth({
       state.isDestroyed = true
       cancelAnimationFrame(state.animationFrameId)
       resizeObserver.disconnect()
+      visibilityObserver.disconnect()
 
       domElement.removeEventListener('pointerdown', onPointerDown)
       window.removeEventListener('pointermove', onPointerMove)
