@@ -150,6 +150,7 @@ router.post('/signup', authLimiter, async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 12)
+
     const user = await User.create({
       name,
       email,
