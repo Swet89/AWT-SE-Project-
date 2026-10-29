@@ -1,4 +1,3 @@
-```javascript
 const mongoose = require('mongoose')
 
 // Schema for individual activities in a day's itinerary
@@ -57,4 +56,4 @@ const itinerarySchema = new mongoose.Schema(
 
 // Export the Itinerary model for use in other files
 module.exports = mongoose.model('Itinerary', itinerarySchema)
-```
+
