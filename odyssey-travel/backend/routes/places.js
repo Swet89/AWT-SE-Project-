@@ -1,7 +1,6 @@
 const express = require('express')
 const Destination = require('../models/Destination')
 const Place = require('../models/Place')
-
 const router = express.Router()
 
 router.get('/autocomplete', async (req, res) => {
