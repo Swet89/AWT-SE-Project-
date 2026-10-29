@@ -25,7 +25,7 @@ const destinationSchema = new mongoose.Schema(
       latitude: { type: Number },
       longitude: { type: Number },
     },
-  
+    nearestAirport: { type: String, default: '' },
     nearestRailwayStation: { type: String, default: '' },
     photoCredit: { type: String, default: '' },
     photoSourceUrl: { type: String, default: '' },
