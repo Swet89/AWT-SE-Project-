@@ -8,3 +8,6 @@ odyssey-travel/frontend/node_modules/
 odyssey-travel/frontend/dist/
 .DS_Store
 Thumbs.db
+node_modules/
+.env
+dist/
