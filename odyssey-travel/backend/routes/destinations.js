@@ -1,4 +1,3 @@
-
 const express = require('express')
 
 const Destination = require('../models/Destination')
