@@ -55,5 +55,5 @@ const itinerarySchema = new mongoose.Schema(
 )
 
 // Export the Itinerary model for use in other files
-module.exports = mongoose.model('Itinerary', itinerarySchema)
+
 
