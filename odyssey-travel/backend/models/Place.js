@@ -33,8 +33,7 @@ placeSchema.index({ provider: 1, providerId: 1 }, { unique: true })
 placeSchema.index({
   name: 'text',
   city: 'text',
-  state: 'text',
-  country: 'text',
+
 })
 
 // Export the Place model
