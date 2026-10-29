@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { showToast } from '../lib/toast.js'
+import InteractiveRouteMap from '../components/InteractiveRouteMap.jsx'
+import { resolveSpotCoordinates } from '../lib/geoUtils.js'
 import { API } from '../lib/api.js'
 
 const inr = new Intl.NumberFormat('en-IN', {
@@ -188,6 +190,34 @@ export default function Wayfinder() {
     window.print()
   }
 
+  const currentDestinationObj = destinations.find(
+    (d) => String(d._id) === String(plan?.destinationId || plan?.destination),
+  ) || {
+    name: plan?.destinationName || 'Destination',
+    coordinates: { latitude: 27.1767, longitude: 78.0081 },
+  }
+
+  const DAY_PALETTE = ['#d4af37', '#20b2aa', '#e06666', '#9370db', '#e67e22', '#3498db', '#1abc9c']
+
+  const itineraryRoutes = plan?.days ? plan.days.map((day, dIdx) => ({
+    id: `day-${day.day}`,
+    label: `Day ${day.day}: ${day.theme || `Day ${day.day}`}`,
+    color: DAY_PALETTE[dIdx % DAY_PALETTE.length],
+    waypoints: (day.activities || []).map((act, aIdx) => {
+      const coords = resolveSpotCoordinates(act.place, currentDestinationObj, aIdx)
+      return {
+        id: `${day.day}-${aIdx}`,
+        name: act.place,
+        subtitle: act.time,
+        description: act.description,
+        category: aIdx === 0 ? 'Morning ☀️' : aIdx === 1 ? 'Afternoon 🌤️' : 'Evening 🌙',
+        cost: act.estimatedCostINR,
+        lat: coords.lat,
+        lon: coords.lon,
+      }
+    }),
+  })) : []
+
   return (
     <main className="wayfinder-page">
       <header className="wayfinder-heading">
@@ -327,6 +357,21 @@ export default function Wayfinder() {
           <h2>{plan.title}</h2>
           <p>{plan.summary}</p>
 
+          {/* Interactive 2D Wayfinder Route Map */}
+          {itineraryRoutes.length > 0 && (
+            <InteractiveRouteMap
+              title={`${plan.destinationName || currentDestinationObj.name} Daily Route Map`}
+              subtitle="Interactive 2D topological route map with day-by-day transit sequences, stop metrics, and directions"
+              initialCenter={{
+                lat: currentDestinationObj.coordinates?.latitude || 27.1767,
+                lon: currentDestinationObj.coordinates?.longitude || 78.0081,
+              }}
+              routes={itineraryRoutes}
+              height="480px"
+              allowDaySelection={true}
+            />
+          )}
+
           {plan.days.map((day) => (
             <section className="itinerary-day" key={day.day}>
               <h3>
@@ -370,14 +415,41 @@ export default function Wayfinder() {
         ) : (
           savedItineraries.map((itinerary) => (
             <article className="saved-itinerary" key={itinerary._id}>
-              <h3>{itinerary.title}</h3>
-              <p>
-                {itinerary.destinationName} · {itinerary.days.length} days
-              </p>
-              <p>
-                Estimated total:{' '}
-                {inr.format(itinerary.totalEstimatedCostINR)}
-              </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                  <h3 style={{ margin: '0 0 0.35rem' }}>{itinerary.title}</h3>
+                  <p style={{ margin: '0 0 0.25rem' }}>
+                    {itinerary.destinationName} · {itinerary.days?.length || 0} days
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    Estimated total:{' '}
+                    <strong>{inr.format(itinerary.totalEstimatedCostINR)}</strong>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPlan(itinerary)
+                    window.scrollTo({ top: 380, behavior: 'smooth' })
+                    showToast(`Loaded "${itinerary.title}" route map.`)
+                  }}
+                  style={{
+                    padding: '0.6rem 1.4rem',
+                    borderRadius: '999px',
+                    border: '1px solid var(--gold, #b58b4a)',
+                    background: 'var(--navy, #10232d)',
+                    color: 'var(--gold, #b58b4a)',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                  }}
+                >
+                  <span>🗺️</span> View Route Map & Plan
+                </button>
+              </div>
             </article>
           ))
         )}
