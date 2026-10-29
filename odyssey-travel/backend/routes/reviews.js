@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const Review = require('../models/Review')
 const Destination = require('../models/Destination')
 const authenticate = require('../middleware/authenticate')
-
 const router = express.Router()
 
 router.get('/:destinationId', async (req, res) => {
@@ -32,7 +31,6 @@ router.get('/:destinationId', async (req, res) => {
     return res.status(500).json({ message: 'Could not load destination reviews.' })
   }
 })
-
 router.put('/:destinationId', authenticate, async (req, res) => {
   try {
     const { destinationId } = req.params
