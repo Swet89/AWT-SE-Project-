@@ -14,7 +14,14 @@ export default function Wayfinder() {
   const token = sessionStorage.getItem('odysseyAccessToken')
   const navigate = useNavigate()
 
-  const [destinations, setDestinations] = useState([])
+  const [destinations, setDestinations] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return cached ? JSON.parse(cached) : []
+    } catch {
+      return []
+    }
+  })
   const [savedItineraries, setSavedItineraries] = useState([])
   const [userProfile, setUserProfile] = useState(null)
   const [destinationId, setDestinationId] = useState('')
@@ -29,25 +36,43 @@ export default function Wayfinder() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (!token) return undefined
-
     const controller = new AbortController()
 
     async function loadPageData() {
       try {
+        const destPromise = axios.get(`${API}/destinations`, { signal: controller.signal })
+          .then((res) => {
+            setDestinations(res.data)
+            try {
+              sessionStorage.setItem('odysseyCachedDestinations', JSON.stringify(res.data))
+            } catch {}
+          })
+          .catch(() => {
+            try {
+              const cached = sessionStorage.getItem('odysseyCachedDestinations')
+              if (cached) setDestinations(JSON.parse(cached))
+            } catch {}
+          })
+
+        if (!token) {
+          await destPromise
+          return
+        }
+
         const authConfig = {
           headers: { Authorization: `Bearer ${token}` },
           signal: controller.signal,
         }
 
-        const [destinationResponse, itineraryResponse, userResponse] = await Promise.all([
-          axios.get(`${API}/destinations`, { signal: controller.signal }),
-          axios.get(`${API}/itineraries`, authConfig),
+        const [_, itineraryResponse, userResponse] = await Promise.all([
+          destPromise,
+          axios.get(`${API}/itineraries`, authConfig).catch(() => ({ data: [] })),
           axios.get(`${API}/auth/me`, authConfig).catch(() => null),
         ])
 
-        setDestinations(destinationResponse.data)
-        setSavedItineraries(itineraryResponse.data)
+        if (itineraryResponse?.data) {
+          setSavedItineraries(itineraryResponse.data)
+        }
 
         if (userResponse?.data?.user?.travelProfile) {
           const prof = userResponse.data.user.travelProfile
@@ -68,7 +93,7 @@ export default function Wayfinder() {
 
         setError(
           requestError.response?.data?.message ||
-            'Could not load Wayfinder. Check that the backend is running.',
+            'Could not load your travel planner data.',
         )
       }
     }

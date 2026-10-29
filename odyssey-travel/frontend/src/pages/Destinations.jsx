@@ -209,12 +209,26 @@ function DestinationCard({ place, isSaved, busyId, toggleFavorite, inr }) {
 }
 
 export default function Destinations() {
-  const [destinations, setDestinations] = useState([])
+  const [destinations, setDestinations] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return cached ? JSON.parse(cached) : []
+    } catch {
+      return []
+    }
+  })
   const [smartSearchResults, setSmartSearchResults] = useState(null)
   const [smartSearchIntent, setSmartSearchIntent] = useState(null)
   const [isSmartSearching, setIsSmartSearching] = useState(false)
   const [favoriteIds, setFavoriteIds] = useState(() => new Set())
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return !cached || JSON.parse(cached).length === 0
+    } catch {
+      return true
+    }
+  })
   const [error, setError] = useState('')
   const [favoriteError, setFavoriteError] = useState('')
   const [busyId, setBusyId] = useState('')
@@ -225,27 +239,38 @@ export default function Destinations() {
   const currentQuery = searchParams.get('q') || ''
   const searchTerm = currentQuery.trim().toLowerCase()
 
-  useEffect(() => {
-    const controller = new AbortController()
-
-    async function loadDestinations() {
+  const loadDestinations = async (signal) => {
+    try {
+      const response = await axios.get(`${API}/destinations`, {
+        signal,
+      })
+      setDestinations(response.data)
+      setError('')
       try {
-        const response = await axios.get(`${API}/destinations`, {
-          signal: controller.signal,
-        })
-        setDestinations(response.data)
-      } catch {
-        if (!controller.signal.aborted) {
-          setError('Could not load destinations. Check that the backend is running.')
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false)
-        }
+        sessionStorage.setItem('odysseyCachedDestinations', JSON.stringify(response.data))
+      } catch {}
+    } catch {
+      if (!signal?.aborted) {
+        try {
+          const cached = sessionStorage.getItem('odysseyCachedDestinations')
+          if (cached && JSON.parse(cached).length > 0) {
+            setDestinations(JSON.parse(cached))
+            setError('')
+            return
+          }
+        } catch {}
+        setError('Could not load destinations. Check that the backend is running.')
+      }
+    } finally {
+      if (!signal?.aborted) {
+        setLoading(false)
       }
     }
+  }
 
-    loadDestinations()
+  useEffect(() => {
+    const controller = new AbortController()
+    loadDestinations(controller.signal)
     return () => controller.abort()
   }, [])
 
@@ -504,9 +529,30 @@ export default function Destinations() {
       )}
 
       {!loading && error && (
-        <p className="page-message error-message" role="alert">
-          {error}
-        </p>
+        <div style={{ textAlign: 'center', margin: '2rem auto' }}>
+          <p className="page-message error-message" role="alert" style={{ marginBottom: '1rem' }}>
+            {error}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setLoading(true)
+              setError('')
+              loadDestinations()
+            }}
+            style={{
+              padding: '0.65rem 1.6rem',
+              borderRadius: '999px',
+              border: '1px solid var(--gold, #b58b4a)',
+              background: 'var(--navy, #10232d)',
+              color: 'var(--gold, #b58b4a)',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+          >
+            Retry Loading Destinations
+          </button>
+        </div>
       )}
 
       {favoriteError && (

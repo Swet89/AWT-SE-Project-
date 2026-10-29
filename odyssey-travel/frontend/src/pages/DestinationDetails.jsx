@@ -482,7 +482,7 @@ export default function DestinationDetails() {
                 key={place._id}
                 to={`/destinations/${place._id}`}
               >
-                <img src={place.imageUrl} alt={place.name} loading="lazy" />
+                <img src={place.imageUrl} alt={place.name} loading="lazy" referrerPolicy="no-referrer" />
                 <span>{place.name}</span>
                 <small>{place.country}</small>
               </Link>

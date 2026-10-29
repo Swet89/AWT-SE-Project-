@@ -13,8 +13,22 @@ export default function Home() {
   const [searching, setSearching] = useState(false)
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0)
-  const [destinations, setDestinations] = useState([])
-  const [destinationsLoading, setDestinationsLoading] = useState(true)
+  const [destinations, setDestinations] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return cached ? JSON.parse(cached) : []
+    } catch {
+      return []
+    }
+  })
+  const [destinationsLoading, setDestinationsLoading] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return !cached || JSON.parse(cached).length === 0
+    } catch {
+      return true
+    }
+  })
   const [destinationsError, setDestinationsError] = useState('')
   const [selectedDestination, setSelectedDestination] = useState(null)
   const destinationRailRef = useRef(null)
@@ -24,9 +38,25 @@ export default function Home() {
     const controller = new AbortController()
 
     axios.get(`${API}/destinations`, { signal: controller.signal })
-      .then((response) => setDestinations(response.data))
+      .then((response) => {
+        setDestinations(response.data)
+        setDestinationsError('')
+        try {
+          sessionStorage.setItem('odysseyCachedDestinations', JSON.stringify(response.data))
+        } catch {}
+      })
       .catch(() => {
-        if (!controller.signal.aborted) setDestinationsError('Destinations are temporarily unavailable.')
+        if (!controller.signal.aborted) {
+          try {
+            const cached = sessionStorage.getItem('odysseyCachedDestinations')
+            if (cached && JSON.parse(cached).length > 0) {
+              setDestinations(JSON.parse(cached))
+              setDestinationsError('')
+              return
+            }
+          } catch {}
+          setDestinationsError('Destinations are temporarily unavailable.')
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setDestinationsLoading(false)
@@ -320,7 +350,7 @@ export default function Home() {
         {destinations.length > 0 && (
           <div className="home-destination-rail" ref={destinationRailRef} role="region" aria-label="Featured destinations" tabIndex={0}>
             {destinations.slice(0, 10).map((place) => (
-              <Link className="home-destination-card" data-reveal key={place._id} to={`/destinations/${place._id}`}>
+              <Link className="home-destination-card" key={place._id} to={`/destinations/${place._id}`}>
                 <img src={place.imageUrl} alt={`View of ${place.name}`} loading="lazy" referrerPolicy="no-referrer" />
                 <span className="home-destination-location">{place.state || place.country}</span>
                 <h3>{place.name}</h3>

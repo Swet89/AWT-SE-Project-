@@ -102,7 +102,7 @@ export default function ScrollExperience() {
     }
   }, [location.pathname])
 
-  // High-performance native IntersectionObserver for scroll reveals (Zero MutationObserver lag)
+  // High-performance native IntersectionObserver for scroll reveals with dynamic element discovery
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.querySelectorAll('[data-reveal]').forEach((el) => {
@@ -126,18 +126,30 @@ export default function ScrollExperience() {
       }
     )
 
-    // Observe all current reveal elements
-    const elements = document.querySelectorAll('[data-reveal]')
-    elements.forEach((el) => {
-      const rect = el.getBoundingClientRect()
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('is-revealed')
-      } else {
-        observer.observe(el)
-      }
-    })
+    const scanAndObserve = () => {
+      const elements = document.querySelectorAll('[data-reveal]:not(.is-revealed)')
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect()
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add('is-revealed')
+        } else {
+          observer.observe(el)
+        }
+      })
+    }
 
-    return () => observer.disconnect()
+    scanAndObserve()
+
+    // Dynamically observe any elements added asynchronously (e.g. after API queries)
+    const mutObserver = new MutationObserver(() => {
+      scanAndObserve()
+    })
+    mutObserver.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      observer.disconnect()
+      mutObserver.disconnect()
+    }
   }, [location.pathname])
 
   return (
