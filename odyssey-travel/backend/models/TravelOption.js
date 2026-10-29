@@ -33,7 +33,10 @@ const travelOptionSchema = new mongoose.Schema(
     amenities: [{ type: String }],
 
     // Information about pricing estimates and providers
- 
+    estimated: { type: Boolean, default: true },
+    provider: { type: String, default: 'seed' },
+    providerOfferId: { type: String, default: '' },
+    offerExpiresAt: { type: Date, default: null },
   },
   { timestamps: true },
 )
