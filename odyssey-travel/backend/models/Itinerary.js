@@ -33,7 +33,12 @@ const itinerarySchema = new mongoose.Schema(
     },
 
     // Destination associated with the itinerary
-  
+    destination: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Destination',
+      required: true,
+    },
+
     // Basic itinerary information
     destinationName: { type: String, required: true },
     title: { type: String, required: true },
