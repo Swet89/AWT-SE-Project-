@@ -22,7 +22,10 @@ const travelOptionSchema = new mongoose.Schema(
     arrivalTime: { type: String, default: '' },
     departureDate: { type: String, default: '' },
 
-
+    // Pricing and travel details
+    priceINR: { type: Number, required: true, min: 0 },
+    stops: { type: Number, default: 0 },
+    travelClass: { type: String, default: '' },
 
     // Rating and display information
     rating: { type: Number, default: 0, min: 0, max: 5 },
