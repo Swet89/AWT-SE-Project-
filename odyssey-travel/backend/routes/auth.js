@@ -41,6 +41,7 @@ function createAccessToken(user) {
 }
 
 // Generate a refresh token
+
 function createRefreshToken(user) {
   const secret =
     process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET
