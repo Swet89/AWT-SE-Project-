@@ -34,8 +34,7 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true },
 )
 
-// Allow only one review per user for each destination
-reviewSchema.index({ destination: 1, user: 1 }, { unique: true })
+
 
 // Export the Review model
 module.exports = mongoose.model('Review', reviewSchema)
