@@ -1,5 +1,4 @@
 const Destination = require('../models/Destination')
-
 // Curated destination cafe databases for popular destinations
 const curatedCafes = {
   goa: {
@@ -288,7 +287,6 @@ async function handleConciergeChat({ message, conversationHistory = [], destinat
         ],
       }
     }
-
     return {
       reply: `Odyssey features **70 curated world-class destinations**! Are you looking for:\n\n• **Sun & Coastline**: Goa, Andaman Islands, Bali, Santorini, Kerala Backwaters\n• **Royal Heritage**: Jaipur, Udaipur, Agra, Hampi, Rome, Athens\n• **Alpine High Peaks**: Leh-Ladakh, Manali, Munnar, Darjeeling, Shimla\n• **Spiritual & Culture**: Varanasi, Amritsar, Rishikesh, Kyoto\n\n*Tell me a destination name or style, and I'll lay out all its attractions and secrets!*`,
       suggestedActions: [
@@ -450,5 +448,4 @@ async function handleConciergeChat({ message, conversationHistory = [], destinat
         ],
   }
 }
-
 module.exports = { handleConciergeChat }
