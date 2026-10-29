@@ -54,6 +54,11 @@ const bookingSchema = new mongoose.Schema(
       max: 100,
     },
 
+    couponCode: { type: String, default: '' },
+    paymentOrderId: { type: String, default: '' },
+    paymentId: { type: String, default: '' },
+    paymentMethod: { type: String, default: '' },
+    pnr: { type: String, default: '' },
 
     status: {
       type: String,
