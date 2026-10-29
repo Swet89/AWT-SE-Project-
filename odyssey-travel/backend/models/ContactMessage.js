@@ -34,7 +34,11 @@ const contactMessageSchema = new mongoose.Schema({
     trim: true,
     minlength: 5,
     maxlength: 3000
-
+  },
+  status: {
+    type: String,
+    enum: ['unread', 'read', 'resolved'],
+    default: 'unread'
   }
 }, {
   timestamps: true
