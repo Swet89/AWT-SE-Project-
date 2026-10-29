@@ -4,28 +4,35 @@ import 'leaflet/dist/leaflet.css'
 import { calculateTotalRouteDistance, estimateTransitTimeMinutes } from '../lib/geoUtils.js'
 import './InteractiveRouteMap.css'
 
-// Premium Tile Providers (Free, reliable, no API keys required)
+// 100% Free & Open High-Definition Tile Providers (Zero API Key, No Watermark)
 const TILE_LAYERS = {
   voyager: {
-    name: 'Voyager (Light)',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
+    name: 'Street (Light)',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; StreetMap',
     maxZoom: 19,
+    subdomains: 'abc',
   },
   dark: {
     name: 'Dark Voyage',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; Dark Canvas',
     maxZoom: 19,
+    subdomains: 'abc',
   },
   satellite: {
     name: 'Satellite View',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    subdomains: 'abc',
+    attribution: 'Tiles &copy; Esri &mdash; High-Res Aerial',
     maxZoom: 18,
+    subdomains: 'abc',
+  },
+  osm: {
+    name: 'OpenStreetMap',
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19,
+    subdomains: 'abc',
   },
 }
 
@@ -76,6 +83,19 @@ export default function InteractiveRouteMap({
   useEffect(() => {
     if (!mapContainerRef.current) return
 
+    // Clean up any stale Leaflet instance or container ID from StrictMode or previous mounts
+    if (mapInstanceRef.current) {
+      try {
+        mapInstanceRef.current.remove()
+      } catch (err) {
+        // ignore removal errors
+      }
+      mapInstanceRef.current = null
+    }
+    if (mapContainerRef.current && mapContainerRef.current._leaflet_id) {
+      delete mapContainerRef.current._leaflet_id
+    }
+
     // Fallback coordinates (Agra) if none provided
     const defaultLat = initialCenter?.lat || (allActiveWaypoints[0]?.lat) || 27.1767
     const defaultLon = initialCenter?.lon || (allActiveWaypoints[0]?.lon) || 78.0081
@@ -99,8 +119,8 @@ export default function InteractiveRouteMap({
     const tileConfig = TILE_LAYERS[tileStyle] || TILE_LAYERS.voyager
     const tiles = L.tileLayer(tileConfig.url, {
       attribution: tileConfig.attribution,
-      subdomains: tileConfig.subdomains,
-      maxZoom: tileConfig.maxZoom,
+      subdomains: tileConfig.subdomains || 'abc',
+      maxZoom: tileConfig.maxZoom || 19,
     }).addTo(map)
     tileLayerRef.current = tiles
 
@@ -109,8 +129,15 @@ export default function InteractiveRouteMap({
     map.on('mouseout', () => map.scrollWheelZoom.disable())
 
     return () => {
-      map.remove()
+      try {
+        map.remove()
+      } catch (err) {
+        // ignore
+      }
       mapInstanceRef.current = null
+      if (mapContainerRef.current && mapContainerRef.current._leaflet_id) {
+        delete mapContainerRef.current._leaflet_id
+      }
     }
   }, [])
 
@@ -120,14 +147,18 @@ export default function InteractiveRouteMap({
     if (!map) return
 
     if (tileLayerRef.current) {
-      map.removeLayer(tileLayerRef.current)
+      try {
+        map.removeLayer(tileLayerRef.current)
+      } catch (err) {
+        // ignore
+      }
     }
 
     const tileConfig = TILE_LAYERS[tileStyle] || TILE_LAYERS.voyager
     const tiles = L.tileLayer(tileConfig.url, {
       attribution: tileConfig.attribution,
-      subdomains: tileConfig.subdomains,
-      maxZoom: tileConfig.maxZoom,
+      subdomains: tileConfig.subdomains || 'abc',
+      maxZoom: tileConfig.maxZoom || 19,
     }).addTo(map)
     tileLayerRef.current = tiles
   }, [tileStyle])
@@ -291,15 +322,15 @@ export default function InteractiveRouteMap({
               type="button"
               className={`map-layer-btn ${tileStyle === 'voyager' ? 'is-active' : ''}`}
               onClick={() => setTileStyle('voyager')}
-              title="Voyager Light Map"
+              title="Esri Street Map (Clean, No Watermark)"
             >
-              Voyager
+              Street
             </button>
             <button
               type="button"
               className={`map-layer-btn ${tileStyle === 'dark' ? 'is-active' : ''}`}
               onClick={() => setTileStyle('dark')}
-              title="Dark Voyage Map"
+              title="Dark Canvas (Luxury Dark Mode)"
             >
               Dark
             </button>
@@ -310,6 +341,14 @@ export default function InteractiveRouteMap({
               title="Satellite Aerial Imagery"
             >
               Satellite
+            </button>
+            <button
+              type="button"
+              className={`map-layer-btn ${tileStyle === 'osm' ? 'is-active' : ''}`}
+              onClick={() => setTileStyle('osm')}
+              title="OpenStreetMap Standard"
+            >
+              OSM
             </button>
           </div>
 

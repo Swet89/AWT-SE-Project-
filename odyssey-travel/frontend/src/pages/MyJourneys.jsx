@@ -892,7 +892,7 @@ export default function MyJourneys() {
                       <div className="booking-history-actions">
                         <strong>{inr.format(booking.totalINR)}</strong>
                         <button
-                          className="view-itinerary-button"
+                          className="view-itinerary-button booking-action-btn"
                           type="button"
                           aria-expanded={expandedBookingId === booking._id}
                           onClick={() => setExpandedBookingId((current) =>
@@ -904,7 +904,7 @@ export default function MyJourneys() {
                         {booking.status === 'pending_payment' && (
                           <>
                             <button
-                              className="view-itinerary-button"
+                              className="view-itinerary-button booking-action-btn booking-pay-btn"
                               type="button"
                               style={{ background: '#caa459', color: '#0c1c24', fontWeight: 700, borderColor: '#caa459' }}
                               disabled={payingBookingId === booking._id}
@@ -924,7 +924,7 @@ export default function MyJourneys() {
                         )}
                         {booking.status === 'confirmed' && (
                           <button
-                            className="view-itinerary-button"
+                            className="view-itinerary-button booking-action-btn print-ticket-btn"
                             type="button"
                             onClick={() => window.print()}
                             title="Print E-Ticket / Receipt"

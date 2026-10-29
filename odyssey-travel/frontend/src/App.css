@@ -3234,25 +3234,41 @@ body[data-theme='dark'] .saved-itineraries > p {
 }
 
 /* Action buttons in Journeys, Booking History & Saved Plans */
+.booking-history-actions .view-itinerary-button,
+.saved-itinerary-actions .view-itinerary-button,
+.booking-action-btn {
+  color: #17272e;
+  border: 1px solid #c8bca7;
+  background: #fdfbf7;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
 :root[data-theme='dark'] .view-itinerary-button,
 body[data-theme='dark'] .view-itinerary-button,
 :root[data-theme='dark'] .booking-history-actions .view-itinerary-button,
-:root[data-theme='dark'] .saved-itinerary-actions .view-itinerary-button {
-  color: #f7f3eb !important;
-  border-color: rgba(228, 201, 142, 0.45) !important;
-  background: rgba(228, 201, 142, 0.1) !important;
-  font-weight: 600;
+:root[data-theme='dark'] .saved-itinerary-actions .view-itinerary-button,
+:root[data-theme='dark'] .booking-action-btn,
+body[data-theme='dark'] .booking-action-btn,
+.history-card .booking-action-btn {
+  color: #ffffff !important;
+  border-color: rgba(228, 201, 142, 0.6) !important;
+  background: rgba(228, 201, 142, 0.16) !important;
+  font-weight: 600 !important;
   border-radius: 8px;
 }
 
 :root[data-theme='dark'] .view-itinerary-button:hover,
 body[data-theme='dark'] .view-itinerary-button:hover,
 :root[data-theme='dark'] .booking-history-actions .view-itinerary-button:hover,
-:root[data-theme='dark'] .saved-itinerary-actions .view-itinerary-button:hover {
-  background: rgba(228, 201, 142, 0.22) !important;
+:root[data-theme='dark'] .saved-itinerary-actions .view-itinerary-button:hover,
+:root[data-theme='dark'] .booking-action-btn:hover,
+body[data-theme='dark'] .booking-action-btn:hover,
+.history-card .booking-action-btn:hover {
+  background: #caa459 !important;
   border-color: #ffd88a !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(228, 201, 142, 0.25);
+  color: #0c1c24 !important;
+  box-shadow: 0 4px 14px rgba(228, 201, 142, 0.35);
 }
 
 :root[data-theme='dark'] .edit-profile-button,
@@ -4938,8 +4954,17 @@ body[data-theme='dark'] .home-section-actions a {
 }
 
 /* Ensure chatbot window and form inputs retain natural native cursor */
+body:has(.odyssey-chat-window:hover) .custom-cursor,
+body:has(.leaflet-container:hover) .custom-cursor {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 :root[data-custom-cursor='active'] .odyssey-chat-window,
 :root[data-custom-cursor='active'] .odyssey-chat-window *,
+:root[data-custom-cursor='active'] .leaflet-container,
+:root[data-custom-cursor='active'] .leaflet-container *,
 :root[data-custom-cursor='active'] input,
 :root[data-custom-cursor='active'] textarea,
 :root[data-custom-cursor='active'] select {

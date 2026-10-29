@@ -23,8 +23,17 @@ export default function CustomCursor() {
 
     function moveCursor(event) {
       if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
-      if (isSuppressed) return
 
+      const target = event.target instanceof Element ? event.target : null
+      if (target && target.closest('.odyssey-chat-window, .odyssey-chat-toggle, .leaflet-container')) {
+        isSuppressed = true
+        root.classList.remove('is-active')
+        root.style.visibility = 'hidden'
+        return
+      }
+
+      isSuppressed = false
+      root.style.visibility = 'visible'
       root.classList.add('is-active')
       document.documentElement.dataset.customCursor = 'active'
       x = event.clientX
@@ -45,13 +54,15 @@ export default function CustomCursor() {
       if (!target || target === lastTarget) return
       lastTarget = target
 
-      // If hovering inside the chatbot window or standard form inputs, disable custom cursor so native cursor is used
-      if (target.closest('.odyssey-chat-window, input, textarea, select')) {
+      // If hovering inside the chatbot window, leaflet maps, or form inputs, disable custom cursor so native cursor is used
+      if (target.closest('.odyssey-chat-window, .odyssey-chat-toggle, .leaflet-container, input, textarea, select')) {
         isSuppressed = true
         root.classList.remove('is-active')
+        root.style.visibility = 'hidden'
         return
       }
       isSuppressed = false
+      root.style.visibility = 'visible'
 
       const interactive = target.closest('a, button, [role="button"], [draggable="true"], canvas, .home-destination-rail')
       if (!interactive) {
