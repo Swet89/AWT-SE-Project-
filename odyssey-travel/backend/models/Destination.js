@@ -28,8 +28,7 @@ const destinationSchema = new mongoose.Schema(
     nearestAirport: { type: String, default: '' },
     nearestRailwayStation: { type: String, default: '' },
     photoCredit: { type: String, default: '' },
-    photoSourceUrl: { type: String, default: '' },
-    wikipediaUrl: { type: String, default: '' },
+ 
   },
   { timestamps: true },
 )
