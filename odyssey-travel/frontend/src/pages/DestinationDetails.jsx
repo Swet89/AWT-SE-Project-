@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import WeatherWidget from '../components/WeatherWidget.jsx'
-
-const API = 'http://localhost:5000/api'
+import AiTravelConcierge from '../components/AiTravelConcierge.jsx'
+import InteractiveRouteMap from '../components/InteractiveRouteMap.jsx'
+import { resolveSpotCoordinates } from '../lib/geoUtils.js'
+import { API } from '../lib/api.js'
 
 export default function DestinationDetails() {
   const { id } = useParams()
@@ -251,6 +253,67 @@ export default function DestinationDetails() {
     maximumFractionDigits: 0,
   }).format(estimatedTripCost)
 
+  const destinationCircuitRoutes = destination ? [
+    {
+      id: 'circuit',
+      label: `${destination.name} Sights & Highlights Circuit`,
+      color: '#d4af37',
+      waypoints: (destination.famousSpots && destination.famousSpots.length > 0
+        ? destination.famousSpots
+        : (destination.attractions || []).map((name) => ({ name, description: `Popular attraction in ${destination.name}` }))
+      ).map((spot, idx) => {
+        const coords = resolveSpotCoordinates(spot.name, destination, idx)
+        return {
+          id: `spot-${idx}`,
+          name: spot.name,
+          subtitle: `Stop ${idx + 1} on ${destination.name} Circuit`,
+          description: spot.description,
+          imageUrl: spot.imageUrl || destination.imageUrl,
+          category: 'Famous Spot',
+          lat: coords.lat,
+          lon: coords.lon,
+        }
+      }),
+    },
+    ...(destination.nearestAirport || destination.nearestRailwayStation
+      ? [
+          {
+            id: 'transit',
+            label: 'Transit & Arrival Gateways',
+            color: '#20b2aa',
+            waypoints: [
+              ...(destination.nearestAirport
+                ? [
+                    {
+                      id: 'transit-airport',
+                      name: destination.nearestAirport,
+                      subtitle: 'Primary Arrival Airport',
+                      description: `Major air gateway serving ${destination.name} travelers.`,
+                      category: 'Airport ✈️',
+                      lat: Number(((destination.coordinates?.latitude || 27.1767) - 0.055).toFixed(5)),
+                      lon: Number(((destination.coordinates?.longitude || 78.0081) - 0.045).toFixed(5)),
+                    },
+                  ]
+                : []),
+              ...(destination.nearestRailwayStation
+                ? [
+                    {
+                      id: 'transit-rail',
+                      name: destination.nearestRailwayStation,
+                      subtitle: 'Main Railway Station',
+                      description: `Primary train junction connecting ${destination.name}.`,
+                      category: 'Railway 🚆',
+                      lat: Number(((destination.coordinates?.latitude || 27.1767) - 0.025).toFixed(5)),
+                      lon: Number(((destination.coordinates?.longitude || 78.0081) + 0.02).toFixed(5)),
+                    },
+                  ]
+                : []),
+            ],
+          },
+        ]
+      : []),
+  ] : []
+
   return (
     <main className="page-shell destination-details">
       <Link to="/destinations">← Back to destinations</Link>
@@ -259,6 +322,7 @@ export default function DestinationDetails() {
         className="destination-details-image"
         src={destination.imageUrl}
         alt={destination.name}
+        referrerPolicy="no-referrer"
       />
       {destination.photoCredit && (
         <p className="destination-photo-credit">
@@ -355,12 +419,44 @@ export default function DestinationDetails() {
           'Check local conditions before travelling.'}
       </p>
 
-      <h2>Top attractions</h2>
-      <ul>
-        {(destination.attractions || []).map((attraction) => (
-          <li key={attraction}>{attraction}</li>
-        ))}
-      </ul>
+      <h2>Famous spots to explore</h2>
+      {destination.famousSpots?.length > 0 ? (
+        <div className="destination-spots-gallery">
+          {destination.famousSpots.map((spot, idx) => (
+            <div key={idx} className="spot-gallery-card">
+              <div className="spot-gallery-image-wrap">
+                <img src={spot.imageUrl} alt={spot.name} loading="lazy" referrerPolicy="no-referrer" />
+                <span className="spot-number-tag">Spot {idx + 1}</span>
+              </div>
+              <div className="spot-gallery-info">
+                <h3>{spot.name}</h3>
+                <p>{spot.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <ul className="destination-attraction-fallback-list">
+          {(destination.attractions || []).map((attraction) => (
+            <li key={attraction}>{attraction}</li>
+          ))}
+        </ul>
+      )}
+
+      {/* Interactive 2D Route & Circuit Map */}
+      {destination && destinationCircuitRoutes.length > 0 && (
+        <InteractiveRouteMap
+          title={`${destination.name} Sightseeing Circuit & Route Map`}
+          subtitle={`Interactive 2D topological route linking top landmarks, famous spots, and arrival gateways across ${destination.name}`}
+          initialCenter={{
+            lat: destination.coordinates?.latitude || 27.1767,
+            lon: destination.coordinates?.longitude || 78.0081,
+          }}
+          routes={destinationCircuitRoutes}
+          height="480px"
+          allowDaySelection={true}
+        />
+      )}
 
       <p>
         Estimated daily budget: ₹
@@ -464,13 +560,20 @@ export default function DestinationDetails() {
                 key={place._id}
                 to={`/destinations/${place._id}`}
               >
-                <img src={place.imageUrl} alt={place.name} loading="lazy" />
+                <img src={place.imageUrl} alt={place.name} loading="lazy" referrerPolicy="no-referrer" />
                 <span>{place.name}</span>
                 <small>{place.country}</small>
               </Link>
             ))}
           </div>
         </section>
+      )}
+
+      {destination && (
+        <AiTravelConcierge
+          destinationId={destination._id}
+          destinationName={destination.name}
+        />
       )}
     </main>
   )

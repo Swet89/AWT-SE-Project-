@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const Itinerary = require('../models/Itinerary')
 const Destination = require('../models/Destination')
 const authenticate = require('../middleware/authenticate')
-
 const router = express.Router()
 
 router.get('/', authenticate, async (req, res) => {

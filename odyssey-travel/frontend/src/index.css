@@ -50,6 +50,27 @@
   }
 }
 
+/* Explicit dark theme via data attribute (used by theme toggle) */
+:root[data-theme='dark'] {
+  --text: #f3eee3;
+  --text-h: #f3eee3;
+  --bg: #101b24;
+  --border: #35464a;
+  --code-bg: #1a2a33;
+  --accent: #e4c98e;
+  --accent-bg: rgba(228, 201, 142, 0.15);
+  --accent-border: rgba(228, 201, 142, 0.5);
+  --social-bg: rgba(26, 42, 51, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  color: #f3eee3;
+  background: #101b24;
+}
+
+:root[data-theme='dark'] #social .button-icon {
+  filter: invert(1) brightness(2);
+}
+
 body {
   margin: 0;
 }

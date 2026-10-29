@@ -19,9 +19,12 @@ export default function CustomCursor() {
     let frame = 0
     let x = window.innerWidth / 2
     let y = window.innerHeight / 2
+    let isSuppressed = false
 
     function moveCursor(event) {
       if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return
+      if (isSuppressed) return
+
       root.classList.add('is-active')
       document.documentElement.dataset.customCursor = 'active'
       x = event.clientX
@@ -36,9 +39,21 @@ export default function CustomCursor() {
       })
     }
 
+    let lastTarget = null
     function setCursorMode(event) {
       const target = event.target instanceof Element ? event.target : null
-      const interactive = target?.closest('a, button, [role="button"], [draggable="true"], canvas, .home-destination-rail')
+      if (!target || target === lastTarget) return
+      lastTarget = target
+
+      // If hovering inside the chatbot window or standard form inputs, disable custom cursor so native cursor is used
+      if (target.closest('.odyssey-chat-window, input, textarea, select')) {
+        isSuppressed = true
+        root.classList.remove('is-active')
+        return
+      }
+      isSuppressed = false
+
+      const interactive = target.closest('a, button, [role="button"], [draggable="true"], canvas, .home-destination-rail')
       if (!interactive) {
         root.dataset.mode = 'default'
         ring.dataset.label = ''

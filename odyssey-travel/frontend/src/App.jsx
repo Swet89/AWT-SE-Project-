@@ -11,14 +11,29 @@ import TravelSearch from './pages/TravelSearch.jsx'
 import Contact from './pages/Contact.jsx'
 import Wayfinder from './pages/Wayfinder.jsx'
 import DevTeam from './pages/DevTeam.jsx'
+import ApiStatus from './pages/ApiStatus.jsx'
 import BackgroundMusic from './components/BackgroundMusic.jsx'
 import ScrollExperience from './components/ScrollExperience.jsx'
 import CustomCursor from './components/CustomCursor.jsx'
 import ToastViewport from './components/ToastViewport.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import AiTravelConcierge from './components/AiTravelConcierge.jsx'
 import { signOutSession } from './lib/authRefresh.js'
 
 const ContestOfBow = lazy(() => import('./pages/ContestOfBow.jsx'))
+
+const routeTitles = {
+  '/': 'Odyssey — Smart AI Tourism Planner & Travel Concierge',
+  '/destinations': '50+ Global Destinations | Odyssey Travel',
+  '/login': 'Sign In | Odyssey Travel',
+  '/signup': 'Create Traveler Account | Odyssey Travel',
+  '/wayfinder': 'Wayfinder AI Itinerary Planner | Odyssey Travel',
+  '/journeys': 'My Journeys & Booking History | Odyssey Travel',
+  '/contest': 'Contest of the Bow — Travel Rewards | Odyssey Travel',
+  '/team': 'Engineering Architecture & Creators | Odyssey Travel',
+  '/contact': 'Odyssey Concierge & Traveler Support | Odyssey Travel',
+  '/status': 'System Diagnostics & Health | Odyssey Travel',
+}
 
 function NotFound() {
   return (
@@ -42,6 +57,17 @@ export default function App() {
     Boolean(sessionStorage.getItem('odysseyAccessToken')),
   )
   const [theme, setTheme] = useState(() => localStorage.getItem('odysseyTheme') || 'light')
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Sync document title with current route
+  useEffect(() => {
+    const title = routeTitles[location.pathname] ||
+      (location.pathname.startsWith('/destinations/') ? 'Destination Details | Odyssey Travel' :
+       location.pathname.startsWith('/search/') ? 'Live Travel Search | Odyssey Travel' :
+       'Odyssey — Smart AI Tourism Planner')
+    document.title = title
+    setMenuOpen(false) // Auto-close mobile drawer on route navigation
+  }, [location.pathname])
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -66,101 +92,126 @@ export default function App() {
   async function signOut() {
     await signOutSession()
     setIsSignedIn(false)
+    setMenuOpen(false)
     navigate('/login')
   }
 
   return (
     <>
-      <nav className="navbar">
-        <Link className="brand" to="/">
+      <nav className="navbar" aria-label="Main Navigation">
+        <Link className="brand" to="/" onClick={() => setMenuOpen(false)}>
+          <span className="brand-mark">Ω</span>
           ODYSSEY TRAVEL
         </Link>
 
-        <div className="nav-links">
+        {/* Mobile Hamburger Toggle */}
+        <button
+          className="nav-hamburger"
+          type="button"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-expanded={menuOpen}
+          aria-label="Toggle navigation menu"
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Navigation Links (Desktop bar / Mobile slide-out drawer) */}
+        <div className={`nav-links ${menuOpen ? 'mobile-open' : ''}`}>
           <Link to="/destinations">Destinations</Link>
-          {isSignedIn ? (
+          <Link to="/search/flights">Travel search</Link>
+          <Link to="/wayfinder">Wayfinder AI</Link>
+
+          {isSignedIn && (
             <>
               <Link to="/journeys">My journeys</Link>
               <Link to="/contest">Contest</Link>
-              <button className="nav-signout-button" type="button" onClick={signOut}>
-                Sign out
-              </button>
             </>
-          ) : (
-            <Link to="/login">Sign in</Link>
           )}
-          <Link to="/search/flights">Travel search</Link>
-          <Link to="/wayfinder">Wayfinder</Link>
-          <Link to="/team">Dev team</Link>
-          <Link to="/contact">Contact</Link>
-          <button
-            className="nav-control-button"
-            type="button"
-            onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            aria-pressed={theme === 'dark'}
-          >
-            {theme === 'dark' ? '☀ Light' : '☾ Dark'}
-          </button>
-          <BackgroundMusic />
+
+          <Link to="/team">About & Tech</Link>
+          <Link to="/contact">Concierge</Link>
+
+          <div className="nav-actions-row">
+            <button
+              className="nav-control-button"
+              type="button"
+              onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-pressed={theme === 'dark'}
+            >
+              {theme === 'dark' ? '☀ Light' : '☾ Dark'}
+            </button>
+            <BackgroundMusic />
+          </div>
+
+          {isSignedIn ? (
+            <button className="nav-signout-button" type="button" onClick={signOut}>
+              Sign out
+            </button>
+          ) : (
+            <Link to="/login" className="nav-signout-button" onClick={() => setMenuOpen(false)}>
+              Sign in
+            </Link>
+          )}
         </div>
       </nav>
 
       <ScrollExperience />
       <CustomCursor />
       <ToastViewport />
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          className="route-transition"
-          key={location.pathname}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.24, ease: 'easeOut' }}
-        >
-      <Routes location={location}>
-        <Route path="/" element={<Home />} />
-        <Route path="/destinations" element={<Destinations />} />
-        <Route path="/destinations/:id" element={<DestinationDetails />} />
-        <Route path="/login" element={<Auth />} />
-        <Route path="/signup" element={<Auth />} />
-        <Route path="/search/:kind" element={<TravelSearch />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/team" element={<DevTeam />} />
+      <motion.div
+        className="route-transition"
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, ease: 'easeOut' }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/destinations/:id" element={<DestinationDetails />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/signup" element={<Auth />} />
+          <Route path="/search/:kind" element={<TravelSearch />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/team" element={<DevTeam />} />
+          <Route path="/status" element={<ApiStatus />} />
 
-        <Route
-          path="/journeys"
-          element={
-            <ProtectedRoute>
-              <MyJourneys />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/journeys"
+            element={
+              <ProtectedRoute>
+                <MyJourneys />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/wayfinder"
-          element={
-            <ProtectedRoute>
-              <Wayfinder />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/wayfinder"
+            element={
+              <ProtectedRoute>
+                <Wayfinder />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/contest"
-          element={
-            <ProtectedRoute>
-              <Suspense fallback={<main className="page-message">Loading the contest…</main>}>
-                <ContestOfBow />
-              </Suspense>
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/contest"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<main className="page-message">Loading the contest…</main>}>
+                  <ContestOfBow />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-        </motion.div>
-      </AnimatePresence>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </motion.div>
+
+      <AiTravelConcierge />
     </>
   )
 }
+

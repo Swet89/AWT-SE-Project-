@@ -82,7 +82,9 @@ router.post('/submit', submitLimiter, async (req, res) => {
         code: user.gameCouponCode,
         discountPercent: user.gameDiscountPercent,
       },
-    })
+    }
+  )
+
   } catch (error) {
     console.error('Submitting game score failed:', error.message)
     return res.status(500).json({ message: 'Could not record your game score.' })

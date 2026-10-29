@@ -2,8 +2,10 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { DestinationSkeleton } from '../components/SkeletonCard.jsx'
+import { API } from '../lib/api.js'
+import DestinationPreviewCard from '../components/DestinationPreviewCard.jsx'
 
-const HeroGlobe = lazy(() => import('../components/HeroGlobe.jsx'))
+const Interactive3DEarth = lazy(() => import('../components/Interactive3DEarth.jsx'))
 
 export default function Home() {
   const [query, setQuery] = useState('')
@@ -11,19 +13,50 @@ export default function Home() {
   const [searching, setSearching] = useState(false)
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0)
-  const [destinations, setDestinations] = useState([])
-  const [destinationsLoading, setDestinationsLoading] = useState(true)
+  const [destinations, setDestinations] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return cached ? JSON.parse(cached) : []
+    } catch {
+      return []
+    }
+  })
+  const [destinationsLoading, setDestinationsLoading] = useState(() => {
+    try {
+      const cached = sessionStorage.getItem('odysseyCachedDestinations')
+      return !cached || JSON.parse(cached).length === 0
+    } catch {
+      return true
+    }
+  })
   const [destinationsError, setDestinationsError] = useState('')
+  const [selectedDestination, setSelectedDestination] = useState(null)
   const destinationRailRef = useRef(null)
   const navigate = useNavigate()
 
   useEffect(() => {
     const controller = new AbortController()
 
-    axios.get('http://localhost:5000/api/destinations', { signal: controller.signal })
-      .then((response) => setDestinations(response.data))
+    axios.get(`${API}/destinations`, { signal: controller.signal })
+      .then((response) => {
+        setDestinations(response.data)
+        setDestinationsError('')
+        try {
+          sessionStorage.setItem('odysseyCachedDestinations', JSON.stringify(response.data))
+        } catch {}
+      })
       .catch(() => {
-        if (!controller.signal.aborted) setDestinationsError('Destinations are temporarily unavailable.')
+        if (!controller.signal.aborted) {
+          try {
+            const cached = sessionStorage.getItem('odysseyCachedDestinations')
+            if (cached && JSON.parse(cached).length > 0) {
+              setDestinations(JSON.parse(cached))
+              setDestinationsError('')
+              return
+            }
+          } catch {}
+          setDestinationsError('Destinations are temporarily unavailable.')
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setDestinationsLoading(false)
@@ -75,7 +108,7 @@ export default function Home() {
 
       try {
         const response = await axios.get(
-          'http://localhost:5000/api/places/autocomplete',
+          `${API}/places/autocomplete`,
           {
             params: { q: searchTerm },
             signal: controller.signal,
@@ -155,11 +188,22 @@ export default function Home() {
         />
       </video>
       <div className="home-hero-overlay" aria-hidden="true" />
-      <Suspense fallback={<div className="hero-globe-fallback" aria-hidden="true" />}>
-        <HeroGlobe />
-      </Suspense>
 
-      <div className="home-content">
+      {/* 3D Interactive Earth Stage */}
+      <div
+        className={`home-hero-globe-zone ${selectedDestination ? 'has-card-open' : ''}`}
+        data-lenis-prevent="true"
+      >
+        <Suspense fallback={<div className="hero-globe-fallback" aria-hidden="true" />}>
+          <Interactive3DEarth
+            onSelectDestination={(dest) => setSelectedDestination(dest)}
+            selectedDestinationId={selectedDestination?.id}
+            isCardOpen={Boolean(selectedDestination)}
+          />
+        </Suspense>
+      </div>
+
+      <div className={`home-content ${selectedDestination ? 'has-card-open' : ''}`}>
         <p className="eyebrow" data-reveal>
           <span /> YOUR NEXT GREAT STORY BEGINS HERE
         </p>
@@ -197,7 +241,7 @@ export default function Home() {
             aria-activedescendant={suggestionsOpen && suggestions.length
               ? `place-suggestion-${activeSuggestionIndex}`
               : undefined}
-            placeholder="Where do you want to go?"
+            placeholder="Ask AI e.g. 'Beach trip under ₹40,000 in December' or search places…"
             autoComplete="off"
           />
 
@@ -242,18 +286,35 @@ export default function Home() {
         )}
 
         <div className="hot-suggestions" data-reveal>
-          <span>HOT SUGGESTIONS</span>
-          {['Goa', 'Jaipur', 'Munnar', 'Athens'].map((place) => (
+          <span>AI DISCOVERY PROMPTS</span>
+          {['Beach trip under ₹40,000 in December', 'Mountain retreat under ₹25,000', 'Cultural heritage in Rajasthan', 'Monsoon escapes in Kerala'].map((prompt) => (
             <button
               type="button"
-              key={place}
-              onClick={() => openResults(place)}
+              key={prompt}
+              onClick={() => openResults(prompt)}
             >
-              {place}
+              {prompt}
             </button>
           ))}
         </div>
+
+        <div className="hero-cta-actions" data-reveal>
+          <Link to="/destinations" className="hero-cta-pill primary">
+            Explore All Destinations <span aria-hidden="true">→</span>
+          </Link>
+          <Link to="/wayfinder" className="hero-cta-pill secondary">
+            Plan with Wayfinder AI ✦
+          </Link>
+        </div>
       </div>
+
+      {/* Destination Preview Card Overlay (Rendered as hero overlay to eliminate stacking collisions) */}
+      {selectedDestination && (
+        <DestinationPreviewCard
+          destination={selectedDestination}
+          onClose={() => setSelectedDestination(null)}
+        />
+      )}
       </section>
 
       <div className="travel-marquee" aria-label="Explore India and the world">
@@ -289,8 +350,8 @@ export default function Home() {
         {destinations.length > 0 && (
           <div className="home-destination-rail" ref={destinationRailRef} role="region" aria-label="Featured destinations" tabIndex={0}>
             {destinations.slice(0, 10).map((place) => (
-              <Link className="home-destination-card" data-reveal key={place._id} to={`/destinations/${place._id}`}>
-                <img src={place.imageUrl} alt={`View of ${place.name}`} loading="lazy" />
+              <Link className="home-destination-card" key={place._id} to={`/destinations/${place._id}`}>
+                <img src={place.imageUrl} alt={`View of ${place.name}`} loading="lazy" referrerPolicy="no-referrer" />
                 <span className="home-destination-location">{place.state || place.country}</span>
                 <h3>{place.name}</h3>
                 <span className="home-destination-budget">

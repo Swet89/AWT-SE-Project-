@@ -11,6 +11,7 @@ const {
   notFoundHandler,
   errorHandler,
 } = require('./middleware/requestSafety')
+const { ensureMongoRunning } = require('./utils/ensureMongo')
 
 const authRouter = require('./routes/auth')
 const destinationsRouter = require('./routes/destinations')
@@ -23,6 +24,7 @@ const chatRouter = require('./routes/chat')
 const itinerariesRouter = require('./routes/itineraries')
 const reviewsRouter = require('./routes/reviews')
 const gameRouter = require('./routes/game')
+const contactRouter = require('./routes/contact')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -37,11 +39,15 @@ const apiLimiter = rateLimit({
   }),
 })
 
+const allowedOrigins = process.env.CLIENT_ORIGIN
+  ? process.env.CLIENT_ORIGIN.split(',').map((o) => o.trim())
+  : ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173']
+
 app.use(helmet())
 app.use(requestLogger)
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: allowedOrigins,
     credentials: true,
   }),
 )
@@ -68,12 +74,14 @@ app.use('/api/chat', chatRouter)
 app.use('/api/itineraries', itinerariesRouter)
 app.use('/api/reviews', reviewsRouter)
 app.use('/api/game', gameRouter)
+app.use('/api/contact', contactRouter)
 
 app.use('/api', notFoundHandler)
 app.use(errorHandler)
 
 async function startServer() {
   try {
+    await ensureMongoRunning(process.env.MONGODB_URI)
     await mongoose.connect(process.env.MONGODB_URI)
     console.log('Connected to MongoDB')
 
