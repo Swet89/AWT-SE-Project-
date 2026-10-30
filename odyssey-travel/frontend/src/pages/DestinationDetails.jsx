@@ -318,12 +318,19 @@ export default function DestinationDetails() {
     <main className="page-shell destination-details">
       <Link to="/destinations">← Back to destinations</Link>
 
-      <img
-        className="destination-details-image"
-        src={destination.imageUrl}
-        alt={destination.name}
-        referrerPolicy="no-referrer"
-      />
+      <div className="destination-details-hero-frame">
+        <div
+          className="destination-details-hero-backdrop"
+          style={{ backgroundImage: `url(${destination.imageUrl})` }}
+          aria-hidden="true"
+        />
+        <img
+          className="destination-details-image"
+          src={destination.imageUrl}
+          alt={destination.name}
+          referrerPolicy="no-referrer"
+        />
+      </div>
       {destination.photoCredit && (
         <p className="destination-photo-credit">
           Photo:{' '}
