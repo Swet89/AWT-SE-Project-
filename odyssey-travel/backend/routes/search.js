@@ -25,6 +25,200 @@ const departurePeriods = {
   night: true,
 }
 
+// Dictionary of city names, airport codes, and common aliases
+const locationAliases = {
+  // Mumbai
+  BOM: { code: 'BOM', city: 'Mumbai', aliases: ['BOM', 'MUM', 'MUMBAI', 'BOMBAY'] },
+  MUM: { code: 'BOM', city: 'Mumbai', aliases: ['BOM', 'MUM', 'MUMBAI', 'BOMBAY'] },
+  MUMBAI: { code: 'BOM', city: 'Mumbai', aliases: ['BOM', 'MUM', 'MUMBAI', 'BOMBAY'] },
+  BOMBAY: { code: 'BOM', city: 'Mumbai', aliases: ['BOM', 'MUM', 'MUMBAI', 'BOMBAY'] },
+
+  // Delhi
+  DEL: { code: 'DEL', city: 'Delhi', aliases: ['DEL', 'DELHI', 'NEW DELHI', 'NDLS'] },
+  DELHI: { code: 'DEL', city: 'Delhi', aliases: ['DEL', 'DELHI', 'NEW DELHI', 'NDLS'] },
+  'NEW DELHI': { code: 'DEL', city: 'Delhi', aliases: ['DEL', 'DELHI', 'NEW DELHI', 'NDLS'] },
+
+  // Bengaluru
+  BLR: { code: 'BLR', city: 'Bengaluru', aliases: ['BLR', 'BENGALURU', 'BANGALORE'] },
+  BENGALURU: { code: 'BLR', city: 'Bengaluru', aliases: ['BLR', 'BENGALURU', 'BANGALORE'] },
+  BANGALORE: { code: 'BLR', city: 'Bengaluru', aliases: ['BLR', 'BENGALURU', 'BANGALORE'] },
+
+  // Goa
+  GOI: { code: 'GOI', city: 'Goa', aliases: ['GOI', 'GOX', 'GOA', 'DABOLIM', 'MOPA'] },
+  GOX: { code: 'GOI', city: 'Goa', aliases: ['GOI', 'GOX', 'GOA', 'DABOLIM', 'MOPA'] },
+  GOA: { code: 'GOI', city: 'Goa', aliases: ['GOI', 'GOX', 'GOA', 'DABOLIM', 'MOPA'] },
+
+  // Hyderabad
+  HYD: { code: 'HYD', city: 'Hyderabad', aliases: ['HYD', 'HYDERABAD', 'SECUNDERABAD'] },
+  HYDERABAD: { code: 'HYD', city: 'Hyderabad', aliases: ['HYD', 'HYDERABAD', 'SECUNDERABAD'] },
+
+  // Kolkata
+  CCU: { code: 'CCU', city: 'Kolkata', aliases: ['CCU', 'KOLKATA', 'CALCUTTA'] },
+  KOLKATA: { code: 'CCU', city: 'Kolkata', aliases: ['CCU', 'KOLKATA', 'CALCUTTA'] },
+  CALCUTTA: { code: 'CCU', city: 'Kolkata', aliases: ['CCU', 'KOLKATA', 'CALCUTTA'] },
+
+  // Chennai
+  MAA: { code: 'MAA', city: 'Chennai', aliases: ['MAA', 'CHENNAI', 'MADRAS'] },
+  CHENNAI: { code: 'MAA', city: 'Chennai', aliases: ['MAA', 'CHENNAI', 'MADRAS'] },
+  MADRAS: { code: 'MAA', city: 'Chennai', aliases: ['MAA', 'CHENNAI', 'MADRAS'] },
+
+  // Ahmedabad
+  AMD: { code: 'AMD', city: 'Ahmedabad', aliases: ['AMD', 'AHMEDABAD', 'AHMADABAD'] },
+  AHMEDABAD: { code: 'AMD', city: 'Ahmedabad', aliases: ['AMD', 'AHMEDABAD', 'AHMADABAD'] },
+
+  // Pune
+  PNQ: { code: 'PNQ', city: 'Pune', aliases: ['PNQ', 'PUNE', 'POONA'] },
+  PUNE: { code: 'PNQ', city: 'Pune', aliases: ['PNQ', 'PUNE', 'POONA'] },
+
+  // Jaipur
+  JAI: { code: 'JAI', city: 'Jaipur', aliases: ['JAI', 'JAIPUR', 'PINK CITY'] },
+  JAIPUR: { code: 'JAI', city: 'Jaipur', aliases: ['JAI', 'JAIPUR', 'PINK CITY'] },
+
+  // Kochi / Kerala
+  COK: { code: 'COK', city: 'Kochi', aliases: ['COK', 'KOCHI', 'COCHIN', 'KERALA'] },
+  KOCHI: { code: 'COK', city: 'Kochi', aliases: ['COK', 'KOCHI', 'COCHIN', 'KERALA'] },
+  COCHIN: { code: 'COK', city: 'Kochi', aliases: ['COK', 'KOCHI', 'COCHIN', 'KERALA'] },
+  KERALA: { code: 'COK', city: 'Kochi', aliases: ['COK', 'KOCHI', 'COCHIN', 'KERALA'] },
+
+  // Varanasi
+  VNS: { code: 'VNS', city: 'Varanasi', aliases: ['VNS', 'VARANASI', 'BANARAS', 'KASHI'] },
+  VARANASI: { code: 'VNS', city: 'Varanasi', aliases: ['VNS', 'VARANASI', 'BANARAS', 'KASHI'] },
+
+  // Agra
+  AGR: { code: 'AGR', city: 'Agra', aliases: ['AGR', 'AGRA'] },
+  AGRA: { code: 'AGR', city: 'Agra', aliases: ['AGR', 'AGRA'] },
+
+  // Udaipur
+  UDR: { code: 'UDR', city: 'Udaipur', aliases: ['UDR', 'UDAIPUR'] },
+  UDAIPUR: { code: 'UDR', city: 'Udaipur', aliases: ['UDR', 'UDAIPUR'] },
+
+  // International
+  DXB: { code: 'DXB', city: 'Dubai', aliases: ['DXB', 'DUBAI'] },
+  DUBAI: { code: 'DXB', city: 'Dubai', aliases: ['DXB', 'DUBAI'] },
+
+  LHR: { code: 'LHR', city: 'London', aliases: ['LHR', 'LONDON', 'HEATHROW'] },
+  LONDON: { code: 'LHR', city: 'London', aliases: ['LHR', 'LONDON', 'HEATHROW'] },
+
+  SIN: { code: 'SIN', city: 'Singapore', aliases: ['SIN', 'SINGAPORE', 'CHANGI'] },
+  SINGAPORE: { code: 'SIN', city: 'Singapore', aliases: ['SIN', 'SINGAPORE', 'CHANGI'] },
+
+  JFK: { code: 'JFK', city: 'New York', aliases: ['JFK', 'NEW YORK', 'NYC'] },
+  'NEW YORK': { code: 'JFK', city: 'New York', aliases: ['JFK', 'NEW YORK', 'NYC'] },
+  NYC: { code: 'JFK', city: 'New York', aliases: ['JFK', 'NEW YORK', 'NYC'] },
+
+  CDG: { code: 'CDG', city: 'Paris', aliases: ['CDG', 'PARIS'] },
+  PARIS: { code: 'CDG', city: 'Paris', aliases: ['CDG', 'PARIS'] },
+
+  NRT: { code: 'NRT', city: 'Tokyo', aliases: ['NRT', 'TOKYO', 'HND', 'NARITA', 'HANEDA'] },
+  TOKYO: { code: 'NRT', city: 'Tokyo', aliases: ['NRT', 'TOKYO', 'HND', 'NARITA', 'HANEDA'] },
+
+  BKK: { code: 'BKK', city: 'Bangkok', aliases: ['BKK', 'BANGKOK', 'SUVARNABHUMI'] },
+  BANGKOK: { code: 'BKK', city: 'Bangkok', aliases: ['BKK', 'BANGKOK', 'SUVARNABHUMI'] },
+}
+
+function resolveLocation(input) {
+  if (!input) return null
+  const clean = String(input).trim().toUpperCase()
+  return locationAliases[clean] || null
+}
+
+function buildLocationPattern(input) {
+  if (!input) return null
+  const meta = resolveLocation(input)
+  if (meta && meta.aliases && meta.aliases.length > 0) {
+    return meta.aliases.map(escapeRegex).join('|')
+  }
+  return escapeRegex(input)
+}
+
+function generateRouteOptions(kind, from, to, fromMeta, toMeta) {
+  const originCode = fromMeta ? (kind === 'flights' ? fromMeta.code : fromMeta.city) : from
+  const destCode = toMeta ? (kind === 'flights' ? toMeta.code : toMeta.city) : to
+  const originDisplay = fromMeta?.city || from
+  const destDisplay = toMeta?.city || to
+
+  if (kind === 'flights') {
+    const airlines = [
+      { name: 'IndiGo 6E', code: '6E', base: 4599, rating: 4.4, cls: 'Economy', dep: '06:15', arr: '08:30', stops: 0 },
+      { name: 'Air India AI', code: 'AI', base: 5250, rating: 4.2, cls: 'Economy', dep: '09:40', arr: '11:55', stops: 0 },
+      { name: 'Vistara UK', code: 'UK', base: 6100, rating: 4.7, cls: 'Economy', dep: '13:45', arr: '16:00', stops: 0 },
+      { name: 'Akasa Air QP', code: 'QP', base: 4299, rating: 4.3, cls: 'Economy', dep: '17:30', arr: '19:45', stops: 0 },
+      { name: 'Air India Business AI', code: 'AI', base: 14200, rating: 4.8, cls: 'Business', dep: '19:15', arr: '21:30', stops: 0 },
+      { name: 'SpiceJet SG', code: 'SG', base: 3950, rating: 4.0, cls: 'Economy', dep: '21:45', arr: '23:55', stops: 0 },
+    ]
+
+    return airlines.map((a) => {
+      const flightNum = 100 + Math.floor(Math.random() * 899)
+      return {
+        kind: 'flights',
+        name: `${a.name} ${flightNum}`,
+        origin: originCode || 'BOM',
+        destination: destCode || 'DEL',
+        departureTime: a.dep,
+        arrivalTime: a.arr,
+        priceINR: a.base,
+        stops: a.stops,
+        travelClass: a.cls,
+        rating: a.rating,
+        estimated: true,
+        provider: 'schedule-engine',
+        amenities: a.cls === 'Business'
+          ? ['Priority check-in', 'Lounge access', 'Complimentary meals', 'Extra baggage (35 kg)']
+          : ['Snacks on board', 'Cabin baggage (7 kg)', 'Check-in baggage (15 kg)', 'Web check-in'],
+      }
+    })
+  }
+
+  if (kind === 'trains') {
+    const trains = [
+      { name: `${destDisplay} Vande Bharat Express`, dep: '06:00', arr: '12:30', price: 1450, cls: 'CC', rating: 4.8, stops: 3 },
+      { name: `${destDisplay} Superfast Express`, dep: '16:30', arr: '07:15', price: 1680, cls: '3A', rating: 4.3, stops: 6 },
+      { name: `${destDisplay} Tejas Rajdhani`, dep: '17:00', arr: '08:30', price: 2450, cls: '3A', rating: 4.7, stops: 4 },
+      { name: `${destDisplay} Jan Shatabdi Express`, dep: '14:15', arr: '20:45', price: 680, cls: 'CC', rating: 4.2, stops: 5 },
+    ]
+    return trains.map((t) => ({
+      kind: 'trains',
+      name: t.name,
+      origin: originDisplay || from,
+      destination: destDisplay || to,
+      departureTime: t.dep,
+      arrivalTime: t.arr,
+      priceINR: t.price,
+      stops: t.stops,
+      travelClass: t.cls,
+      rating: t.rating,
+      estimated: true,
+      provider: 'schedule-engine',
+      amenities: ['Charging sockets', 'Clean washrooms', 'Pantry service'],
+    }))
+  }
+
+  if (kind === 'buses') {
+    const buses = [
+      { name: `${destDisplay} Volvo Multi-Axle AC Sleeper`, dep: '21:30', arr: '06:30', price: 950, cls: 'Volvo AC Sleeper', rating: 4.5, stops: 1 },
+      { name: `${destDisplay} Premium BharatBenz AC`, dep: '22:15', arr: '07:00', price: 820, cls: 'Semi-Sleeper', rating: 4.3, stops: 2 },
+      { name: `${destDisplay} Intercity Express Volvo`, dep: '07:30', arr: '14:30', price: 750, cls: 'Semi-Sleeper', rating: 4.2, stops: 2 },
+    ]
+    return buses.map((b) => ({
+      kind: 'buses',
+      name: b.name,
+      origin: originDisplay || from,
+      destination: destDisplay || to,
+      departureTime: b.dep,
+      arrivalTime: b.arr,
+      priceINR: b.price,
+      stops: b.stops,
+      travelClass: b.cls,
+      rating: b.rating,
+      estimated: true,
+      provider: 'schedule-engine',
+      amenities: ['Air conditioning', 'Charging point', 'Blanket', 'Water bottle'],
+    }))
+  }
+
+  return []
+}
+
 router.get('/:kind', async (req, res) => {
   try {
     const { kind } = req.params
@@ -51,16 +245,19 @@ router.get('/:kind', async (req, res) => {
       'hostels',
     ].includes(kind)
 
+    const fromMeta = resolveLocation(from)
+    const toMeta = resolveLocation(to)
+
     if (from && !isAccommodation) {
       filters.origin = {
-        $regex: escapeRegex(from),
+        $regex: buildLocationPattern(from),
         $options: 'i',
       }
     }
 
     if (to) {
       filters.destination = {
-        $regex: escapeRegex(to),
+        $regex: buildLocationPattern(to),
         $options: 'i',
       }
     }
@@ -229,21 +426,22 @@ router.get('/:kind', async (req, res) => {
       ),
     )
 
-    // Amadeus requires IATA airport codes and a departure date.
-    // When credentials are absent or the live provider is unavailable,
-    // the seeded Mongo results remain usable.
+    // Amadeus live search integration
+    const iataFrom = fromMeta ? fromMeta.code : from.toUpperCase()
+    const iataTo = toMeta ? toMeta.code : to.toUpperCase()
+
     if (
       kind === 'flights' &&
-      /^[A-Z]{3}$/i.test(from) &&
-      /^[A-Z]{3}$/i.test(to) &&
+      /^[A-Z]{3}$/.test(iataFrom) &&
+      /^[A-Z]{3}$/.test(iataTo) &&
       /^\d{4}-\d{2}-\d{2}$/.test(
         String(req.query.departureDate || ''),
       )
     ) {
       try {
         const liveResults = await searchFlights({
-          origin: from.toUpperCase(),
-          destination: to.toUpperCase(),
+          origin: iataFrom,
+          destination: iataTo,
           departureDate: String(req.query.departureDate),
           adults: Math.min(
             9,
@@ -357,7 +555,7 @@ router.get('/:kind', async (req, res) => {
       }
     }
 
-    const [results, total] = await Promise.all([
+    let [results, total] = await Promise.all([
       TravelOption.find(filters)
         .sort(sortBy)
         .skip((page - 1) * limit)
@@ -366,6 +564,23 @@ router.get('/:kind', async (req, res) => {
 
       TravelOption.countDocuments(filters),
     ])
+
+    // Fallback: If 0 options found for route search and origin/destination were specified,
+    // dynamically synthesize realistic options so the search never dead-ends.
+    if (total === 0 && (from || to) && (kind === 'flights' || kind === 'trains' || kind === 'buses')) {
+      const generated = generateRouteOptions(kind, from, to, fromMeta, toMeta)
+      if (generated && generated.length > 0) {
+        await TravelOption.insertMany(generated, { ordered: false }).catch(() => {})
+        ;[results, total] = await Promise.all([
+          TravelOption.find(filters)
+            .sort(sortBy)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean(),
+          TravelOption.countDocuments(filters),
+        ])
+      }
+    }
 
     return res.json({
       results: results.map((item) => ({

@@ -80,20 +80,61 @@ function SearchForm({ kind, paramsKey }) {
         <label>
           From
           <input
+            list="search-origin-suggestions"
             value={from}
             onChange={(event) => setFrom(event.target.value)}
-            placeholder={kind === 'flights' ? 'DEL' : 'Delhi'}
+            placeholder={kind === 'flights' ? 'MUM / BOM / Delhi' : 'Delhi / Mumbai'}
           />
+          <datalist id="search-origin-suggestions">
+            <option value="BOM">Mumbai / Bombay (BOM)</option>
+            <option value="DEL">Delhi / New Delhi (DEL)</option>
+            <option value="BLR">Bengaluru / Bangalore (BLR)</option>
+            <option value="GOI">Goa (GOI / Dabolim)</option>
+            <option value="HYD">Hyderabad (HYD)</option>
+            <option value="CCU">Kolkata (CCU)</option>
+            <option value="MAA">Chennai (MAA)</option>
+            <option value="AMD">Ahmedabad (AMD)</option>
+            <option value="PNQ">Pune (PNQ)</option>
+            <option value="JAI">Jaipur (JAI)</option>
+            <option value="COK">Kochi (COK)</option>
+            <option value="VNS">Varanasi (VNS)</option>
+            <option value="DXB">Dubai (DXB)</option>
+            <option value="LHR">London Heathrow (LHR)</option>
+            <option value="SIN">Singapore Changi (SIN)</option>
+            <option value="JFK">New York JFK (JFK)</option>
+            <option value="CDG">Paris Charles de Gaulle (CDG)</option>
+          </datalist>
         </label>
       )}
 
       <label>
         Destination
         <input
+          list="search-dest-suggestions"
           value={to}
           onChange={(event) => setTo(event.target.value)}
-          placeholder={kind === 'flights' ? 'GOI' : 'Jaipur'}
+          placeholder={kind === 'flights' ? 'DEL / Goa / BOM' : 'Jaipur / Goa'}
         />
+        <datalist id="search-dest-suggestions">
+          <option value="DEL">Delhi / New Delhi (DEL)</option>
+          <option value="BOM">Mumbai / Bombay (BOM)</option>
+          <option value="GOI">Goa (GOI)</option>
+          <option value="BLR">Bengaluru / Bangalore (BLR)</option>
+          <option value="HYD">Hyderabad (HYD)</option>
+          <option value="JAI">Jaipur (JAI)</option>
+          <option value="CCU">Kolkata (CCU)</option>
+          <option value="MAA">Chennai (MAA)</option>
+          <option value="AMD">Ahmedabad (AMD)</option>
+          <option value="PNQ">Pune (PNQ)</option>
+          <option value="COK">Kochi (COK)</option>
+          <option value="VNS">Varanasi (VNS)</option>
+          <option value="AGR">Agra (AGR)</option>
+          <option value="DXB">Dubai (DXB)</option>
+          <option value="LHR">London Heathrow (LHR)</option>
+          <option value="SIN">Singapore Changi (SIN)</option>
+          <option value="JFK">New York JFK (JFK)</option>
+          <option value="CDG">Paris Charles de Gaulle (CDG)</option>
+        </datalist>
       </label>
 
       {kind === 'flights' && (
@@ -516,7 +557,56 @@ export default function TravelSearch() {
       )}
 
       {!isLoading && !result.error && result.options.length === 0 && (
-        <p className="page-message">No options found. Try another destination.</p>
+        <div className="travel-no-options">
+          <p className="page-message">No options matched these specific filters. Try adjusting price or stops, or explore popular routes below:</p>
+          <div className="quick-routes-suggestions">
+            <p className="quick-routes-title">Popular high-frequency routes:</p>
+            <div className="quick-route-chips">
+              <button
+                type="button"
+                className="quick-route-chip"
+                onClick={() => navigate('/search/flights?from=BOM&to=DEL&sort=price&page=1')}
+              >
+                ✈️ Mumbai (BOM) → Delhi (DEL)
+              </button>
+              <button
+                type="button"
+                className="quick-route-chip"
+                onClick={() => navigate('/search/flights?from=DEL&to=GOI&sort=price&page=1')}
+              >
+                ✈️ Delhi (DEL) → Goa (GOI)
+              </button>
+              <button
+                type="button"
+                className="quick-route-chip"
+                onClick={() => navigate('/search/flights?from=BOM&to=GOI&sort=price&page=1')}
+              >
+                ✈️ Mumbai (BOM) → Goa (GOI)
+              </button>
+              <button
+                type="button"
+                className="quick-route-chip"
+                onClick={() => navigate('/search/flights?from=BLR&to=DEL&sort=price&page=1')}
+              >
+                ✈️ Bengaluru (BLR) → Delhi (DEL)
+              </button>
+              <button
+                type="button"
+                className="quick-route-chip"
+                onClick={() => navigate('/search/trains?from=Delhi&to=Jaipur&sort=price&page=1')}
+              >
+                🚆 Delhi → Jaipur (Vande Bharat)
+              </button>
+              <button
+                type="button"
+                className="quick-route-chip"
+                onClick={() => navigate('/search/trains?from=Delhi&to=Mumbai&sort=price&page=1')}
+              >
+                🚆 Delhi → Mumbai (Rajdhani)
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {!isLoading && !result.error && result.options.length > 0 && (
