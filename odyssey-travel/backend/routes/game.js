@@ -73,8 +73,7 @@ router.post('/submit', submitLimiter, async (req, res) => {
 
     if (!user) {
       return res.status(409).json({ message: 'Your one game has already been played.' })
-    }
-
+    
     
 
   } catch (error) {
