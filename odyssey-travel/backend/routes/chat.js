@@ -715,7 +715,13 @@ Provide helpful, stylish, and practical travel answers. Give structured recommen
             })
           }
         }
-     
+      } catch (geminiError) {
+        console.warn(
+          'Conversational Gemini call failed:',
+          geminiError.message,
+        )
+      }
+    }
 
     // Fall back to the local concierge engine when Gemini is unavailable
     const localResult = await handleConciergeChat({
