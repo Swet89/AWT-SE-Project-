@@ -107,6 +107,13 @@ router.post('/', contactLimiter, async (req, res) => {
       error.message,
     )
 
+     // Return a server error response
+    return res.status(500).json({
+      message:
+        'Could not send your message right now. Please try again later.',
+    })
+  }
+})
    
 
 // Export the router for use in the Express application
