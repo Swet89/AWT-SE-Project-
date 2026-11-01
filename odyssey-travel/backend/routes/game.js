@@ -75,15 +75,7 @@ router.post('/submit', submitLimiter, async (req, res) => {
       return res.status(409).json({ message: 'Your one game has already been played.' })
     }
 
-    return res.status(201).json({
-      message: 'Score recorded. Your discount coupon is ready.',
-      score: user.gameScore,
-      coupon: {
-        code: user.gameCouponCode,
-        discountPercent: user.gameDiscountPercent,
-      },
-    }
-  )
+    
 
   } catch (error) {
     console.error('Submitting game score failed:', error.message)
