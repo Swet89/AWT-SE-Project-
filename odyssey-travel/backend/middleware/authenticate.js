@@ -17,5 +17,13 @@ function authenticate(req, res, next) {
       return res.status(401).json({ message: 'Invalid access token.' })
     }
 
+req.auth = { userId: payload.sub }
+    return next()
+  } catch {
+    return res.status(401).json({ message: 'Access token is invalid or expired.' })
+  }
+}
+
+module.exports = authenticate
 
   
